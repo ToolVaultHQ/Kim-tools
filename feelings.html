@@ -11,26 +11,44 @@ PreviewCopy
   header{padding:16px;text-align:center;background:#e2e8f0;}
   h1{font-size:20px;margin:0;color:#1e293b;}
   p.sub{font-size:14px;margin:6px 0 0;color:#475569;}
-  .wrap{padding:12px 12px 150px;}
-  .group h2{font-size:15px;margin:16px 0 8px;color:#334155;}
+  .wrap{padding:12px 12px 160px;}
+  .group h2{font-size:15px;margin:18px 0 8px;color:#334155;}
+  
+  /* Added smooth transitions for background, border, and size zoom */
   .word{display:inline-block;margin:4px;padding:8px 12px;border-radius:20px;background:#fff;
-        border:1px solid #cbd5e1;font-size:15px;cursor:pointer;user-select:none;color:#1e293b;}
-  .word.selected{background:#facc15;color:#1e293b;border-color:#facc15;font-weight:600;}
+        border:1px solid #cbd5e1;font-size:15px;cursor:pointer;user-select:none;color:#1e293b;
+        transition: background-color 0.25s ease, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.25s ease;}
+  
+  /* Upgraded selected state to Clarity Yellow with a subtle size-pop */
+  .word.selected{background:#facc15;color:#1e293b;border-color:#facc15;font-weight:600;transform: scale(1.05);}
+  
   .tray{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;
         padding:10px 12px;box-shadow:0 -2px 8px rgba(0,0,0,.04);}
   .chosen{font-size:14px;min-height:20px;margin-bottom:8px;color:#334155;word-wrap:break-word;}
   .btns{display:flex;gap:8px;}
-  button{flex:1;padding:12px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;}
+  button{flex:1;padding:12px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition: opacity 0.2s ease;}
+  button:active{opacity: 0.8;}
+  
   #copy{background:#facc15;color:#1e293b;}
   #clear{background:#e2e8f0;color:#475569;}
-  .toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;
+  .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;
          padding:8px 16px;border-radius:20px;font-size:14px;opacity:0;transition:.3s;}
   .toast.show{opacity:1;}
+  
+  /* --- Desktop view adjustments with matching color properties --- */
+  @media (min-width:700px){
+    h1{font-size:34px;}
+    p.sub{font-size:20px;}
+    .group h2{font-size:24px;}
+    .word{font-size:22px;padding:12px 20px;margin:6px;}
+    .chosen{font-size:20px;}
+    button{font-size:22px;padding:16px;}
+    .toast{font-size:20px;}
+  }
 </style>
 </head>
 <body>
 <header>
-
   <h1>Feeling Words 🌿</h1>
   <p class="sub">Tap the words that fit. Then tap Copy and paste them into your memory.</p>
 </header>
@@ -45,10 +63,14 @@ PreviewCopy
 <div class="toast" id="toast">Copied! Now paste into your memory 💛</div>
 <script>
 const groups = {
-  "The Heavy Ones": ["Angry","Hurt","Frustrated","Nervous","Anxious","Overwhelmed","Sad","Confused","Embarrassed","Disrespected","Unseen","Dismissed","Powerless","Trapped","Exhausted","Defeated","Afraid","Ashamed","Guilty","Alone"],
-  "About Myself": ["Like a failure","Not important","Not good enough","Invisible","Unheard","Replaced","Pushed aside","Fighting alone","No one saw how hard I tried"],
-  "The Numb Ones": ["Numb","Shut down","Empty","Going through the motions","Too tired to feel","Just surviving"],
-  "The Lighter Ones": ["Happy","Proud","Relieved","Hopeful","Determined","Strong","Grateful","At peace","Like myself again","Closer to the boys"]
+  "The Heavy Ones": ["Angry","Hurt","Frustrated","Nervous","Anxious","Overwhelmed","Sad","Confused","Embarrassed","Disrespected","Unseen","Dismissed","Powerless","Trapped","Exhausted","Defeated","Afraid","Ashamed","Guilty","Alone","Worried","Scared","Stressed","Panicked","Betrayed","Abandoned","Helpless","Drained","Discouraged","Bitter","Resentful","Heartbroken","Torn","On edge"],
+  "About Myself": ["Like a failure","Not important","Not good enough","Invisible","Unheard","Replaced","Pushed aside","Fighting alone","No one saw how hard I tried","Taken for granted","Talked over","Left out","Blamed unfairly","Judged","Small","Like I let them down","Like I'm never enough"],
+  "As Their Mom": ["Protective","Devoted","Left out of decisions","Missing them","Fiercely loving","Proud of them","Longing to be there","Shut out","Holding on","Powerless as their mom"],
+  "Money & Survival": ["Broke","Stretched thin","Buried in bills","Scraping by","Sacrificing","Going without","Robbed of my future","Just doing my best"],
+  "Toward Joe & Sandra": ["Pressured","Threatened","Bullied","Cornered","Talked down to","Ganged up on","Unfairly treated","Standing my ground"],
+  "In My Body": ["Tight chest","Knot in my stomach","Can't sleep","Heavy","Shaky","Worn out","Tense","Holding my breath"],
+  "The Numb Ones": ["Numb","Shut down","Empty","Going through the motions","Too tired to feel","Just surviving","Detached","Foggy","Frozen","Running on empty","Checked out","Disconnected"],
+  "The Lighter Ones": ["Happy","Proud","Relieved","Hopeful","Determined","Strong","Grateful","At peace","Like myself again","Closer to the boys","Calm","Safe","Encouraged","Motivated","Capable","Free","Lighter","Seen","Understood","Loved","Steady"]
 };
 const selected=[], wrap=document.getElementById('wrap'), chosen=document.getElementById('chosen');
 for(const g in groups){
