@@ -1,0 +1,78 @@
+html
+PreviewCopy
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feeling Words</title>
+<style>
+  body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#fbf7f2;color:#3a3a3a;}
+  header{padding:16px;text-align:center;background:#f3e9dd;}
+  h1{font-size:20px;margin:0;}
+  p.sub{font-size:14px;margin:6px 0 0;color:#6b6b6b;}
+  .wrap{padding:12px 12px 150px;}
+  .group h2{font-size:15px;margin:16px 0 8px;color:#8a6d5a;}
+  .word{display:inline-block;margin:4px;padding:8px 12px;border-radius:20px;background:#fff;
+        border:1px solid #e3d5c5;font-size:15px;cursor:pointer;user-select:none;}
+  .word.selected{background:#c9a27e;color:#fff;border-color:#c9a27e;}
+  .tray{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e3d5c5;
+        padding:10px 12px;box-shadow:0 -2px 8px rgba(0,0,0,.06);}
+  .chosen{font-size:14px;min-height:20px;margin-bottom:8px;color:#555;word-wrap:break-word;}
+  .btns{display:flex;gap:8px;}
+  button{flex:1;padding:12px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;}
+  #copy{background:#c9a27e;color:#fff;}
+  #clear{background:#efe6da;color:#7a6a5a;}
+  .toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);background:#3a3a3a;color:#fff;
+         padding:8px 16px;border-radius:20px;font-size:14px;opacity:0;transition:.3s;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Feeling Words 🌿</h1>
+  <p class="sub">Tap the words that fit. Then tap Copy and paste them into your memory.</p>
+</header>
+<div class="wrap" id="wrap"></div>
+<div class="tray">
+  <div class="chosen" id="chosen">Nothing selected yet…</div>
+  <div class="btns">
+    <button id="clear">Clear</button>
+    <button id="copy">Copy Selected</button>
+  </div>
+</div>
+<div class="toast" id="toast">Copied! Now paste into your memory 💛</div>
+<script>
+const groups = {
+  "The Heavy Ones": ["Angry","Hurt","Frustrated","Nervous","Anxious","Overwhelmed","Sad","Confused","Embarrassed","Disrespected","Unseen","Dismissed","Powerless","Trapped","Exhausted","Defeated","Afraid","Ashamed","Guilty","Alone"],
+  "About Myself": ["Like a failure","Not important","Not good enough","Invisible","Unheard","Replaced","Pushed aside","Fighting alone","No one saw how hard I tried"],
+  "The Numb Ones": ["Numb","Shut down","Empty","Going through the motions","Too tired to feel","Just surviving"],
+  "The Lighter Ones": ["Happy","Proud","Relieved","Hopeful","Determined","Strong","Grateful","At peace","Like myself again","Closer to the boys"]
+};
+const selected=[], wrap=document.getElementById('wrap'), chosen=document.getElementById('chosen');
+for(const g in groups){
+  const div=document.createElement('div');div.className='group';div.innerHTML=`<h2>${g}</h2>`;
+  groups[g].forEach(w=>{
+    const s=document.createElement('span');s.className='word';s.textContent=w;
+    s.onclick=()=>{const i=selected.indexOf(w);
+      if(i>-1){selected.splice(i,1);s.classList.remove('selected');}
+      else{selected.push(w);s.classList.add('selected');}
+      chosen.textContent=selected.length?selected.join(', '):'Nothing selected yet…';};
+    div.appendChild(s);
+  });
+  wrap.appendChild(div);
+}
+document.getElementById('copy').onclick=()=>{
+  if(!selected.length)return;const text=selected.join(', ');
+  navigator.clipboard.writeText(text).then(showToast).catch(()=>{
+    const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);
+    t.select();document.execCommand('copy');t.remove();showToast();});
+};
+document.getElementById('clear').onclick=()=>{
+  selected.length=0;document.querySelectorAll('.word').forEach(w=>w.classList.remove('selected'));
+  chosen.textContent='Nothing selected yet…';
+};
+function showToast(){const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
+</script>
+</body>
+</html>
