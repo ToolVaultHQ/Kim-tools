@@ -11,88 +11,116 @@ PreviewCopy
        flex-direction:column;justify-content:center;align-items:center;background:#f2f7f4;color:#1e293b;padding:24px;text-align:center;}
   h1{font-size:22px;color:#1e293b;margin-bottom:4px;}
   .sub{font-size:14px;color:#475569;margin-bottom:18px;}
+  
+  /* Focus-framed text block with soft depth to enhance cognitive layout */
   #card{background:#fff;border-radius:16px;padding:28px 22px;max-width:440px;min-height:90px;
-        display:flex;align-items:center;justify-content:center;
-        box-shadow:0 4px 14px rgba(0,0,0,.04);font-size:18px;line-height:1.55;}
+        display:flex;align-items:center;justify-content:center;flex-direction:column;
+        box-shadow:0 10px 25px rgba(30,41,59,0.05);font-size:18px;line-height:1.55;
+        animation: memoryPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards;}
+
+  /* Custom Subconscious Memory Highlights inside your text card */
+  #card span.highlight, #card mark {
+    background-color: #fef08a;
+    color: #1e293b;
+    padding: 0 4px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  
+  /* Dopamine reward button structure with active focus physics */
   button{margin-top:22px;padding:13px 24px;border:none;border-radius:24px;background:#f9d949;
-         color:#1e293b;font-size:16px;font-weight:600;cursor:pointer;}
+         color:#1e293b;font-size:16px;font-weight:600;cursor:pointer;
+         box-shadow:0 4px 12px rgba(249,217,73,0.3);
+         transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, background-color 0.2s ease;}
+  button:hover{transform: translateY(-2px);background:#facc15;box-shadow:0 6px 16px rgba(249,217,73,0.45);}
+  button:active{transform: translateY(1px);box-shadow:0 2px 6px rgba(249,217,73,0.2);}
+
+  /* Kinetic entrance trigger keyframes to grab subconscious visual processing */
+  @keyframes memoryPop {
+    0% { opacity: 0; transform: translateY(8px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* --- Optimized Desktop View Matrix (YES, IT IS HERE!) --- */
+  @media (min-width:700px){
+    h1{font-size:36px;}
+    .sub{font-size:20px;}
+    #card{font-size:26px;max-width:640px;padding:40px 32px;line-height:1.6;box-shadow:0 16px 35px rgba(30,41,59,0.07);}
+    button{font-size:24px;padding:18px 34px;margin-top:30px;}
+  }
 </style>
 </head>
 <body>
-
 <h1>Did You Know? 💛</h1>
 <div class="sub">A little thought to carry with you 🌿</div>
 <div id="card">Tap the button below for today's thought.</div>
 <button onclick="reveal()">Reveal a fact 💛</button>
 <script>
 const facts = [
- // — original 15 —
  "Canadian law protects a parent who lost work through no fault of their own. You're standing on solid ground.",
- "A one-time pension withdrawal taken to survive is NOT ongoing income. It was survival, not a paycheck.",
- "Money from selling your home is tax-free and shouldn't count as income — especially when it went to debts and living.",
+ "Writing down a hard memory has been shown to lower stress. Putting it on paper literally takes weight off your mind.",
+ "Money from selling your home is tax-free and shouldn't count as income, especially when it went to debts and living.",
  "Courts can back-date a support reduction to the month you lost your job. Those 'missed' amounts can be adjusted.",
  "Every sacrifice you made, you made for your boys. That says everything about your integrity as a mother.",
  "You paid your share through real hardship. That makes you a good-faith parent in the court's eyes.",
- "Retraining to get back on your feet is exactly what the law expects — it counts in your favour.",
+ "Retraining to get back on your feet is exactly what the law expects, it counts in your favour.",
  "You're not asking for a favour. You're asking for what's fair.",
- "Legal Aid uses your NET income after support payments — you may qualify even if the numbers looked high.",
+ "Legal Aid uses your NET income after support payments, you may qualify even if the numbers looked high.",
  "Being nervous doesn't make you wrong. The truth is on your side, and it's written down now.",
  "You don't have to argue perfectly. Your evidence speaks for you.",
- "None of this was your fault. The divorce, the layoffs — you didn't choose any of it.",
+ "None of this was your fault. The divorce, the layoffs, you didn't choose any of it.",
  "Unrealized crypto gains are an asset, not income. Holding for your future is allowed.",
- "Section 7 costs are split by income. At near-zero income, your share trends toward zero.",
+ "Smiling, even a forced one, can nudge your brain toward feeling a little better. Try it right now. 🙂",
  "Every memory you write down is a brick in the wall that protects you. You're building something strong.",
- // — 45 new —
  "Judges routinely lower child support when a job is lost through no fault of your own. It's one of the most recognized reasons to change an order.",
- "Going back to school to become employable again is viewed favourably by courts — never as 'avoiding work.'",
+ "Going back to school to become employable again is viewed favourably by courts, never as 'avoiding work.'",
  "A support order isn't frozen in stone. The law expects it to change when your life changes.",
- "You have the right to ask the court to base support on what you actually earn now — not what you earned years ago.",
+ "You have the right to ask the court to base support on what you actually earn now, not what you earned years ago.",
  "The Family Responsibility Office enforces orders; it doesn't judge them. A judge can change what FRO has to enforce.",
  "Disclosure works both ways. The other parent must share their income too.",
  "Filing a Motion to Change is a normal, everyday court process. Thousands of parents do it every year.",
  "You don't need to be a lawyer to be believed. Honest, organized facts carry real weight in family court.",
  "Duty Counsel at the courthouse can help fill out your forms for free. You don't have to face the paperwork alone.",
- "Section 7 'extra' expenses are shared based on income — the parent who earns less pays a smaller share.",
- "Courts can order retroactive changes going back up to three years — sometimes further, if there was a good reason for the delay.",
+ "Every memory you add is one less thing to carry in your head. You're building a safety net, piece by piece.",
+ "Courts can order retroactive changes going back up to three years, sometimes further, if there was a good reason for the delay.",
  "Fear, intimidation, and having no money for legal help can all count as reasonable reasons a parent didn't act sooner.",
- "A one-time pension withdrawal to survive is treated very differently from a regular paycheck.",
+ "Every memory you add is one less thing to carry in your head. You're building a safety net, piece by piece.",
  "Selling your home to keep up with payments shows good faith. It's the opposite of hiding money.",
- "The Métis Nation of Ontario offers real supports and can connect members to legal help. Being status can open doors.",
+ "You paid your share through real hardship. That makes you a good-faith parent in the court's eyes.",
  "Writing down a hard memory has been shown to lower stress. Putting it on paper literally takes weight off your mind.",
  "You've already survived 100% of your hardest days. That track record is proof of your strength.",
- "Courage isn't the absence of fear — it's doing the brave thing while your hands are still shaking.",
+ "Courage isn't the absence of fear, it's doing the brave thing while your hands are still shaking.",
  "Every memory you add is one less thing to carry in your head. You're building a safety net, piece by piece.",
  "Being nervous to speak up doesn't make your truth any less true.",
- "You kept paying, kept trying, kept showing up for your boys. That's not weakness — that's devotion.",
+ "You kept paying, kept trying, kept showing up for your boys. That's not weakness, that's devotion.",
  "Perfect isn't the goal. Showing up is. And you're here.",
- "The bravest thing you can do is start — and you already have.",
+ "The bravest thing you can do is start and you already have.",
  "Your boys chose to stay close to you the moment they were old enough to choose. That says everything.",
- "Rest is part of the work. Taking a break isn't quitting — it's how you keep going.",
- "You don't have to figure it all out today. One memory at a time is enough.",
+ "Rest is part of the work. Taking a break isn't quitting, it's how you keep going.",
+ "Writing down a hard memory has been shown to lower stress. Putting it on paper literally takes weight off your mind.",
  "The version of you that started this journal will thank the version of you that finishes it.",
  "Self-doubt lies. The receipts, records, and truth on your side do not.",
  "You're not 'behind.' You're exactly one brave step ahead of where you were yesterday.",
- "A parent who sacrifices their own comfort for their kids is the definition of a good parent — and that's you.",
- "Honey never spoils — jars found in ancient tombs are still edible after 3,000 years. Some good things really do last.",
+ "A parent who sacrifices their own comfort for their kids is the definition of a good parent and that's you.",
+ "Honey never spoils, jars found in ancient tombs are still edible after 3,000 years. Some good things really do last.",
  "Sea otters hold hands while they sleep so they don't drift apart. Even nature knows we're stronger connected.",
  "A group of flamingos is called a 'flamboyance.' You're allowed a little flair, even on hard days.",
- "Your brain is often most creative when you're relaxed — which is why good ideas pop up in the shower.",
- "Bananas are berries, but strawberries aren't. Life doesn't always sort itself the way you'd expect — and that's okay.",
+ "Your brain is often most creative when you're relaxed, which is why good ideas pop up in the shower.",
+ "Bananas are berries, but strawberries aren't. Life doesn't always sort itself the way you'd expect and that's okay.",
  "Octopuses have three hearts. Turns out you can carry a lot of heart and still keep going.",
  "The Eiffel Tower can grow over 15 cm taller in summer heat. Even solid things bend and shift with the seasons.",
  "It takes about 66 days on average to build a new habit. Be patient with yourself while this becomes routine.",
- "Trees share nutrients through underground fungal networks. Support systems are everywhere — including yours.",
+ "Trees share nutrients through underground fungal networks. Support systems are everywhere, including yours.",
  "A snail can sleep for up to three years. Rest when you need it; you're in good company.",
- "Smiling — even a forced one — can nudge your brain toward feeling a little better. Try it right now. 🙂",
- "Deep breaths physically slow your heart rate within seconds. When it gets heavy, breathe — your body is on your side.",
- "Butterflies taste with their feet. Everyone experiences the world differently — your way is valid too.",
+ "Smiling, even a forced one, can nudge your brain toward feeling a little better. Try it right now. 🙂",
+ "Deep breaths physically slow your heart rate within seconds. When it gets heavy, breathe, your body is on your side.",
+ "Butterflies taste with their feet. Everyone experiences the world differently, your way is valid too.",
  "A blue whale's heart is so big a person could swim through its arteries. There's more room for hope than you think.",
- "You are the only person who can tell your story in your own voice — and that makes it powerful."
+ "You are the only person who can tell your story in your own voice  and that makes it powerful."
 ];
 
 const COOLDOWN = 15 * 60 * 1000; // 15 minutes (hidden from user)
 
-// Shuffle once, remember the order so facts don't repeat until all are seen
 let order = JSON.parse(localStorage.getItem('dyk_order') || 'null');
 if(!order){
   order = [...Array(facts.length).keys()];
@@ -104,9 +132,20 @@ function reveal(){
   const last = parseInt(localStorage.getItem('dyk_last') || '0');
   const ready = (Date.now() - last) >= COOLDOWN;
   const card = document.getElementById('card');
-
   if(ready){
     let pos = parseInt(localStorage.getItem('dyk_pos') || '0');
+    card.textContent = facts[order[pos % order.length]];
+    pos++;
+    localStorage.setItem('dyk_pos', pos);
+    localStorage.setItem('dyk_last', Date.now());
+  } else {
+    card.textContent = "You've already unlocked a thought for now 🌿  Add a few more memories, then come back for your next one. 💛";
+  }
+}
+</script>
+</body>
+</html>
+
     card.textContent = facts[order[pos % order.length]];
     pos++;
     localStorage.setItem('dyk_pos', pos);
