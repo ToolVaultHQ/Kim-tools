@@ -1,0 +1,135 @@
+html
+PreviewCopy
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Templates</title>
+<style>
+  body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#f1f5f9;color:#1e293b;}
+  header{padding:16px;text-align:center;background:#e2e8f0;}
+  h1{font-size:20px;margin:0;color:#1e293b;}
+  p.sub{font-size:14px;margin:6px 0 0;color:#475569;}
+  .wrap{padding:14px 14px 40px;max-width:660px;margin:0 auto;}
+  
+  /* Structural info blocks optimizing focus frame psychology */
+  .intro{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px;margin:12px 0;font-size:14px;line-height:1.5;}
+  .intro .fact{background:#f2f7f4;border:1px dashed #475569;border-radius:8px;padding:10px 12px;margin-top:10px;}
+  .intro .fact b{color:#0f172a;}
+  
+  .card{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:14px;margin:16px 0;}
+  
+  /* Interactive anchor points using deep charcoal focus elements */
+  .num{display:inline-block;background:#334155;color:#fff;font-weight:700;border-radius:50%;
+       width:26px;height:26px;line-height:26px;text-align:center;margin-right:8px;font-size:14px;}
+  .title{font-size:16px;font-weight:700;color:#1e293b;}
+  .note{font-size:13px;color:#475569;margin:8px 0;line-height:1.45;}
+  
+  /* Nested data block optimized in Calming Sage Green to lower eye tension */
+  .step{background:#f2f7f4;border:1px dashed #475569;border-radius:8px;padding:10px 12px;margin:10px 0;}
+  .step .lbl{font-size:13px;font-weight:700;color:#334155;display:block;margin-bottom:4px;}
+  .step .line{font-size:13.5px;color:#1e293b;font-style:italic;line-height:1.5;}
+  
+  /* Left-side visual anchor for quick processing memory retention */
+  .tmpl{font-size:14px;line-height:1.5;background:#f8fafc;border-left:4px solid #facc15;
+        padding:10px 12px;border-radius:0 6px 6px 0;color:#1e293b;margin-top:8px;}
+  
+  /* High-engagement Dopamine Action button */
+  button{margin-top:12px;width:100%;padding:12px;border:none;border-radius:9px;background:#f9d949;
+         color:#1e293b;font-size:15px;font-weight:600;cursor:pointer;
+         box-shadow:0 4px 12px rgba(249,217,73,0.25);
+         transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, background-color 0.2s ease;}
+  button:hover{transform: translateY(-2px);background:#facc15;box-shadow:0 6px 16px rgba(249,217,73,0.4);}
+  button:active{transform: translateY(1px);box-shadow:0 2px 6px rgba(249,217,73,0.15);}
+  
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;
+         padding:10px 18px;border-radius:20px;font-size:14px;opacity:0;transition:.3s;z-index:10;}
+  .toast.show{opacity:1;}
+  
+  /* --- Fully Integrated Custom Desktop Responsive Matrix --- */
+  @media (min-width:700px){
+    h1{font-size:32px;} 
+    p.sub{font-size:19px;}
+    .title{font-size:23px;} 
+    .note{font-size:17px;} 
+    .tmpl{font-size:18px;}
+    .step .lbl{font-size:17px;} 
+    .step .line{font-size:17px;}
+    button{font-size:20px;padding:15px;} 
+    .num{width:33px;height:33px;line-height:33px;font-size:18px;}
+    .intro{font-size:17px;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Memory Templates 🌿</h1>
+  <p class="sub">Pick one. Tap Copy. Paste it into your memory, fill the blanks, delete what doesn't fit.</p>
+</header>
+<div class="wrap" id="wrap"></div>
+<div class="toast" id="toast">Copied! Paste it into your memory 💛</div>
+<script>
+// The Step-Back line that rides along on every copy (with bracket examples)
+const STEP_LINE = "Before I write this, I'm picturing where I was: [the room, the car, the kitchen — wherever you were]. It was [morning / night / around dinnertime]. I can almost [hear a voice / feel how tired I was / see what was in front of me].";
+
+const templates = [
+ {n:1,t:"Just Tell It",note:"The all-purpose one. Good when a memory doesn't fit any specific topic.",
+  x:"This is the memory of [what it was about — a phone call, a decision, a day that stuck with me]. It happened around [when — a season, a year, \"the summer the boys moved\"]. Here's what I remember: [tell it in your own words — what happened, who did what]. What stuck with me most was [the part that stayed with you — a look, a word, a feeling, how it ended]."},
+ {n:2,t:"Something Happened Between Us",note:"For a moment between you and another person.",
+  x:"Around [when — a rough date or season], something happened between me and [who — Joe, Sandra, one of the boys, the lawyer]. It started when [what set it off — a text, a comment, a request]. What was said or done: [plain facts — who said what, in order]. Afterward, I felt [feeling — hurt, angry, small, numb], and I [what you did next — paid it, stayed quiet, agreed, walked away]."},
+ {n:3,t:"A Moment I Remember",note:"For a single moment that stuck with you.",
+  x:"I remember a moment around [when — a year, a birthday, a holiday]. I was [where / doing what — at home, driving, at their game]. Then [what happened — the thing that made this moment stick]. It mattered to me because [why — what it meant, what it told me]."},
+ {n:4,t:"Something I Realized or Decided",note:"For a turning point or a decision you made.",
+  x:"Around [when — a rough time period], I came to realize / decided [what — that I couldn't keep up, that the boys would live with Dad]. What led to it was [what happened before — the pressure that built up]. Looking back, it was a turning point because [why — what shifted after]."},
+ {n:5,t:"Something That Changed",note:"For a before-and-after in your life.",
+  x:"Before [when — a year or event], things were [how they were — how life, money, or the boys looked back then]. Then [what changed — the job loss, the move, Sandra arriving]. After that, [how life was different — day to day, financially, emotionally]. It affected me by [the impact — what I lost, gained, had to give up]."},
+ {n:6,t:"Money & Sacrifice",note:"Shows the court real hardship and good faith — not hidden cash.",
+  x:"Around [when — season or year], I had to [sell / withdraw / borrow / go without — e.g., sold the house, drew from my pension] because [reason — to keep up with payments, to survive]. It was about [$ amount — a rough number is fine]. This money went to [where it went — support, rent, debts, the boys]. To manage, I gave up [what you gave up — savings, my home, my retirement]. I remember thinking [your thought — \"I have no choice\"]."},
+ {n:7,t:"A Moment That Felt Like Pressure",note:"Captures demands or threats you felt forced to accept.",
+  x:"On/around [when — a date or season], [who — Sandra, Joe, the lawyer] said or wrote: \"[their words, as close as you remember]\". It came by [how — text, email, phone, a lawyer's letter]. At the time I felt I had to [what you felt forced to do — agree, stay quiet, pay it], even though [the real situation — I couldn't afford it, it wasn't fair]. I didn't push back because [reason — I couldn't afford a lawyer, I was too exhausted]."},
+ {n:8,t:"Being Pushed Aside as Their Mom",note:"Documents decisions made about the boys without you.",
+  x:"Around [when — a rough date], a decision was made about the boys — [what — a vaccine, therapy, school, a medical choice] — and I [what happened to your role — wasn't asked, found out afterward, was overruled]. It was handled by [who — Sandra, Joe]. What actually happened: [plain facts — what was decided and how I learned of it]. I had wanted [your view — what I'd have chosen as their mom]."},
+ {n:9,t:"Losing Work & Starting Over",note:"The heart of your case — involuntary job loss + retraining.",
+  x:"In [month/year — as close as you can], my job at [employer — or \"my workplace\"] ended because [reason — layoff, contract ended] — not my choice. After that, I [what you did next — applied to jobs, started school, began my placement]. My income dropped from about [$ before] to [$ after — or \"almost nothing\"]. To get back on my feet, I [what you did — went back to school, retrained, took an unpaid placement]."},
+ {n:10,t:"Staying Close to the Boys",note:"Shows you're a devoted, good-faith parent.",
+  x:"During [time period — after they moved, the past few years], I stayed connected with the boys by [how — FaceTime, texting, driving to their games]. A time this mattered: [a specific moment — a call, a visit, an event]. Even when [obstacle — the distance, the rules], I made sure to [what you did to stay in their lives]."},
+ {n:11,t:"A Demand or a Bill",note:"Tracks Section 7 expense demands and the pattern over time.",
+  x:"Around [when — date or season], I was asked to pay for [what — braces, therapy, sports, school] — about [$ amount]. The request came from [who — Sandra, Joe] by [how — text, email, a list]. At the time, I was [your situation — working, laid off, in school, broke]. I [what you did — paid it, borrowed to pay it, couldn't afford it]. Compared to before, the amounts had [the pattern — stayed the same, kept climbing]."},
+ {n:12,t:"Why I Couldn't Do This Sooner",note:"Explains the delay — key for backdating support.",
+  x:"Back in [year], I thought about getting help or changing the payments, but [what stopped you — the cost, fear, exhaustion] got in the way. I tried [what you attempted — called Legal Aid, looked for a lawyer], but [what happened — it cost too much, my income looked too high]. Carrying it alone left me [how it felt — drained, scared, like I was facing them by myself]."}
+];
+
+const wrap=document.getElementById('wrap');
+
+// Intro — how templates work + the 25–40% Step-Back explanation (read once, NOT copied)
+const intro=document.createElement('div');intro.className='intro';
+intro.innerHTML="🌿 <b>How to use these:</b> Pick the template that fits (or none — freehand is always fine). Tap <b>Copy</b>, paste it into your \"What Happened\" box, then fill in the [brackets] and delete any line that doesn't fit."+
+  "<div class='fact'><b>⭐ Why the Step-Back line helps:</b> Take 10 seconds first to picture the moment — the room, the time of day, what was in your hands. Studies show this brings up <b>25–40% more detail</b> than remembering cold. You're not inventing anything — just opening a doorway back in. The Step-Back line comes attached to every copy so you can fill it in or delete it once you've written the memory.</div>";
+wrap.appendChild(intro);
+
+// 12 cards — each with the Step-Back LINE (no fact text)
+templates.forEach(t=>{
+  const c=document.createElement('div');c.className='card';
+  c.innerHTML=`
+    <div class="title"><span class="num">${t.n}</span>${t.t}</div>
+    <div class="note">${t.note}</div>
+    <div class="step">
+      <span class="lbl">⭐ Step-Back line (attached to your copy)</span>
+      <div class="line">${STEP_LINE}</div>
+    </div>
+    <div class="tmpl">${t.x}</div>`;
+  const b=document.createElement('button');b.textContent="Copy Step-Back + Template "+t.n;
+  b.onclick=()=>copyText(STEP_LINE + "\n\n" + t.x);
+  c.appendChild(b);wrap.appendChild(c);
+});
+
+function copyText(text){
+  navigator.clipboard.writeText(text).then(showToast).catch(()=>{
+    const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);
+    t.select();document.execCommand('copy');t.remove();showToast();});
+}
+function showToast(){const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
+</script>
+</body>
+</html>
