@@ -305,7 +305,10 @@ function renderDone(rebuild){
       <button class="b sec" onclick="goQ(${T.pages.length-1})">← Edit answers</button>
       <button class="b prim" onclick="copyFinal()">Copy it</button>
     </div>
+    <button class="b" style="margin-top:10px;background:linear-gradient(135deg,#8a3a63,#6a2a70);color:#fff;box-shadow:0 3px 8px rgba(120,40,90,.3)" onclick="polishSpelling()">✨ Polish my spelling</button>
+    <div class="fnote" style="margin-top:8px">Tap this to open a free helper. Just paste, and it fixes the spelling and grammar in your own words. Copy the clean version and paste it back in the box above.</div>
     <button class="skip b" style="margin-top:10px" onclick="startAnother()">Start another memory</button>`;
+
   if(STATE.caught.length){
     h+=`<div class="qlabel" style="margin-top:24px">💡 Memories you caught along the way</div>`;
     STATE.caught.forEach(c=>h+=`<div class="caught">${esc(c)}</div>`);
@@ -331,7 +334,15 @@ function copyFinal(){
   navigator.clipboard.writeText(text).then(()=>toast("Copied! Paste it into your journal 💛")).catch(()=>{
     const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();toast("Copied! 💛");});
 }
-function startAnother(){STATE.tid=null;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.lastAppended='';STATE.edited=false;STATE.screen='pick';save();renderPick();}
+function polishSpelling(){
+  const text=STATE.finalText||'';
+  const prompt="Please fix only the spelling and grammar in the text below. Keep it exactly in my own words and my own voice. Do not change the meaning, do not add anything, and do not make it fancy. Just correct the spelling and grammar, then give it back to me:\n\n"+text;
+  function go(){toast("Copied! Opening the helper, just paste it in ✨");setTimeout(function(){window.open('https://chatgpt.com/','_blank');},900);}
+  navigator.clipboard.writeText(prompt).then(go).catch(function(){
+    var t=document.createElement('textarea');t.value=prompt;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();go();
+  });
+}
+  function startAnother(){STATE.tid=null;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.lastAppended='';STATE.edited=false;STATE.screen='pick';save();renderPick();}
 
 // ---------------- CATCH A MEMORY ----------------
 function refreshBadge(){
