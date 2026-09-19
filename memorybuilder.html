@@ -12,23 +12,27 @@ PreviewCopy
   .hdr{background:linear-gradient(135deg,#e8905d,#c9633f);color:#fff;padding:18px 16px;text-align:center;}
   .hdr h1{margin:0;font-size:22px;font-weight:800;}
   .hdr .sub{font-size:14px;opacity:.95;margin-top:4px;}
-  .screen{max-width:660px;margin:0 auto;padding:16px 16px 130px;}
+  .screen{max-width:660px;margin:0 auto;padding:16px 16px 140px;}
   .lead{text-align:center;font-size:15px;color:#6b5f56;line-height:1.55;margin:14px 0;}
   .blurbcard{background:#fff;border-left:6px solid #e8905d;border-radius:12px;padding:16px;margin:14px 0;
              cursor:pointer;box-shadow:0 2px 8px rgba(150,90,50,.08);}
   .blurbcard h3{margin:0 0 5px;font-size:18px;font-weight:800;color:#c04a24;}
   .blurbcard p{margin:0;font-size:14px;color:#5f544c;line-height:1.5;}
-  .blurbcard.soon{opacity:.5;}
   .narr{background:#fff3ea;border-left:5px solid #e8905d;border-radius:10px;padding:13px 15px;margin:14px 0;
         font-size:16px;line-height:1.6;color:#5a4a3f;}
-  .qlabel{font-size:19px;font-weight:800;color:#c04a24;margin:10px 0;}
-  .groupname{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#a0765f;font-weight:700;margin:16px 0 6px;}
+  .warn{background:#fff6e8;border:2px solid #e0a86a;border-radius:10px;padding:12px 15px;margin:14px 0;
+        font-size:14.5px;line-height:1.55;color:#8a5a2a;}
+  .qlabel{font-size:19px;font-weight:800;color:#c04a24;margin:14px 0 4px;}
+  .fnote{font-size:13.5px;color:#7a6a5f;margin:0 0 6px;line-height:1.5;}
+  .groupname{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#a0765f;font-weight:700;margin:14px 0 6px;}
   .chip{display:inline-block;margin:5px;padding:9px 15px;border-radius:22px;background:#fff;
         border:2px solid #e3c9b8;font-size:15px;cursor:pointer;user-select:none;color:#4a3f38;}
   .chip.on{background:#c9633f;color:#fff;border-color:#c9633f;font-weight:600;}
-  .typewrap{margin:16px 0 6px;display:flex;gap:8px;align-items:center;}
-  input[type=text],textarea{flex:1;padding:12px;border:2px solid #e3c9b8;border-radius:10px;font-size:16px;font-family:inherit;color:#3a332e;}
+  .typewrap{margin:12px 0 6px;display:flex;gap:8px;align-items:center;}
+  input[type=text],textarea{flex:1;padding:12px;border:2px solid #e3c9b8;border-radius:10px;font-size:16px;font-family:inherit;color:#3a332e;box-sizing:border-box;}
   .mic{padding:12px 14px;border:none;border-radius:10px;background:#f2e0d2;font-size:20px;cursor:pointer;}
+  .fieldblock{border-bottom:1px dashed #ecd8c8;padding-bottom:10px;margin-bottom:6px;}
+  .fieldblock:last-child{border-bottom:none;}
   .navbtns{display:flex;gap:8px;margin-top:20px;}
   button.b{flex:1;padding:14px;border:none;border-radius:11px;font-size:16px;font-weight:700;cursor:pointer;}
   .prim{background:#c9633f;color:#fff;} .sec{background:#f2e0d2;color:#8a5a40;} .skip{background:#e5eee0;color:#4f6a45;}
@@ -39,19 +43,20 @@ PreviewCopy
   .jumplist div:active{background:#fbeee4;}
   .jumplist .done::before{content:"✅ ";}
   .jumplist .rev{color:#c04a24;font-weight:700;border-top:1px solid #eaddd2;margin-top:4px;}
-  .finaledit{width:100%;min-height:220px;line-height:1.6;font-size:16px;}
+  .finaledit{width:100%;min-height:240px;line-height:1.6;font-size:16px;}
   .catchBtn{position:fixed;bottom:18px;right:14px;background:#5f8a55;color:#fff;border:none;border-radius:26px;
-            padding:13px 17px;font-size:14px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer;z-index:20;}
+            padding:13px 17px;font-size:14px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer;z-index:50;}
   .badge{background:#fff;color:#5f8a55;border-radius:12px;padding:1px 8px;margin-left:6px;font-size:13px;font-weight:800;}
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:30;padding:20px;}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:60;padding:20px;}
   .modalbox{background:#fff;border-radius:16px;padding:20px;max-width:440px;width:100%;max-height:80vh;overflow:auto;}
   .caught{background:#e5eee0;border-radius:9px;padding:11px 13px;margin-top:9px;font-size:15px;}
+  .clearall{background:none;border:none;color:#b04a2a;font-weight:700;font-size:14px;margin-top:12px;cursor:pointer;}
   .toast{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);background:#3a332e;color:#fff;
-         padding:11px 18px;border-radius:22px;font-size:14px;opacity:0;transition:.3s;z-index:40;text-align:center;max-width:90%;}
+         padding:11px 18px;border-radius:22px;font-size:14px;opacity:0;transition:.3s;z-index:70;text-align:center;max-width:90%;}
   .toast.show{opacity:1;}
   @media(min-width:700px){
     .hdr h1{font-size:32px;} .hdr .sub{font-size:18px;}
-    .lead{font-size:19px;} .narr{font-size:21px;} .qlabel{font-size:26px;}
+    .lead{font-size:19px;} .narr{font-size:21px;} .warn{font-size:18px;} .qlabel{font-size:26px;} .fnote{font-size:16px;}
     .chip{font-size:19px;padding:12px 20px;} input[type=text],textarea{font-size:20px;} .mic{font-size:24px;}
     button.b{font-size:20px;padding:16px;} .blurbcard h3{font-size:23px;} .blurbcard p{font-size:17px;}
     .groupname{font-size:15px;} .jumplist div{font-size:18px;} .catchBtn{font-size:17px;padding:15px 20px;}
@@ -67,68 +72,69 @@ PreviewCopy
 <div class="modal" id="modal">
   <div class="modalbox">
     <div class="qlabel">💡 Memories to come back to</div>
-    <p style="font-size:14px;color:#6b5f56;line-height:1.5;">A memory popped up? Jot a few words so you don't lose it. These stay saved right here <b>and</b> show at the end of your memory.</p>
+    <p style="font-size:14px;color:#6b5f56;line-height:1.5;">A memory popped up? Jot a few words so you don't lose it. These stay saved right here and also show at the end of your memory. They stay even after you start another memory, until you delete them.</p>
     <input type="text" id="catchInput" placeholder="e.g. the day the lawyer's letter came">
     <div class="navbtns">
       <button class="b sec" onclick="closeCatch()">Close</button>
       <button class="b prim" onclick="saveCatch()">Save it</button>
     </div>
     <div id="caughtList"></div>
+    <button class="clearall" id="clearAll" style="display:none" onclick="clearAllCaught()">🗑 Clear the whole list</button>
   </div>
 </div>
 
 <div class="toast" id="toast">Saved 💛</div>
 
 <script>
-// ---------------- DATA: prototype template ----------------
+// ---------------- DATA ----------------
 const TEMPLATES = [
  {
   id:1, title:"A Moment That Felt Like Pressure",
   blurb:"For a demand, threat, or moment you felt forced to go along with something, even when it wasn't fair.",
-  questions:[
-   {key:"when", label:"When was this?",
-    narr:"Let's start with when this happened. A season or a year is plenty, and you can skip it if you're not sure.",
-    ph:"Type or speak the time, like \"early 2019\"",
-    groups:[{name:"Season or year",words:["Spring","Summer","Fall","Winter","2018","2019","2020","2021","2022","2023","2024","2025"]}]},
-   {key:"who", label:"Who put this pressure on you?",
-    narr:"Who was it that pressured you? Tap whoever fits, or type another name.",
-    ph:"Type or speak another name",
-    groups:[{name:"From",words:["Sandra","Joe","Joe and Sandra","their lawyer","a lawyer's letter","FRO","Joe's family"]}]},
-   {key:"words", label:"What did they say or write?",
-    narr:"This is the heart of the memory. Write what they said as close as you remember. Even a few words is enough.",
-    ph:"Type or speak their words",
-    groups:[]},
-   {key:"how", label:"How did the message reach you?",
+  pages:[
+   {navLabel:"When was this?",
+    narr:"Let's start with when this happened. A season or a year is plenty, and you can skip this if you're not sure.",
+    fields:[{key:"when",label:"When was this?",ph:"Type or speak the time, like \"early 2019\"",
+      groups:[{name:"Season or year",words:["Spring","Summer","Fall","Winter","2018","2019","2020","2021","2022","2023","2024","2025"]}]}]},
+   {navLabel:"Who put this pressure on you?",
+    narr:"Who was it that pressured you? Tap whoever fits, or add another name.",
+    fields:[{key:"who",label:"Who put this pressure on you?",ph:"Type or speak another name",
+      groups:[{name:"From",words:["Sandra","Joe","Joe and Sandra","their lawyer","a lawyer's letter","FRO","Joe's family"]}]}]},
+   {navLabel:"How did the message reach you?",
     narr:"How did it come to you?",
-    ph:"Type or speak how it reached you",
-    groups:[{name:"It came by",words:["text","email","a phone call","voicemail","a lawyer's letter","in person","through the boys","social media"]}]},
-   {key:"forced", label:"What did you feel forced to do, or not do?",
+    fields:[{key:"how",label:"How did the message reach you?",ph:"Type or speak how it reached you",
+      groups:[{name:"It came by",words:["text","email","a phone call","voicemail","a lawyer's letter","in person","through the boys","social media"]}]}]},
+   {navLabel:"What was said, and what was really going on",
+    narr:"These two parts are the backbone of the memory: first what they said, then the truth underneath it. Both are best in your own words, so tell it how it really was.",
+    fields:[
+      {key:"words",label:"What did they say or write?",note:"As close as you remember is perfect, even a few words.",ph:"Type or speak their exact words",groups:[]},
+      {key:"real",label:"What was really going on?",note:"This part is best in your own words. Tap an example to get you started, or type or speak your own. A few words or a few sentences, whatever feels right.",ph:"Type or speak the truth in your own words",
+       groups:[
+         {name:"The power behind it",words:["it was intimidating","they were showing their power","they were setting their own rules","I was being bullied","my voice was being taken away","I wasn't being given a choice","I was pressured to do it their way"]},
+         {name:"My real situation",words:["I couldn't afford it","it wasn't fair","I'd already paid my share","I had no income","it wasn't my responsibility","I was barely surviving"]}
+       ]}
+    ]},
+   {navLabel:"What did you feel forced to do?",
     narr:"In that moment, what did you feel you had no choice about? Tap any that fit, or add your own.",
-    ph:"Type or speak what you felt forced to do",
-    groups:[
-      {name:"What I felt I had to do",words:["just agreed","stayed quiet","paid it","signed it","went along with it","apologized"]},
-      {name:"What I felt I couldn't do",words:["couldn't say no","couldn't push back","couldn't ask questions","couldn't stand up for myself"]}
-    ]},
-   {key:"real", label:"What was really going on?",
-    narr:"Now the truth underneath, the part that made it unfair. This one is best in your own words, so tell it how it really was. Tap an example to get started, or type or speak your own. A few words or a few sentences, whatever feels right.",
-    ph:"Type or speak the truth in your own words",
-    groups:[
-      {name:"The real situation",words:["I couldn't afford it","it wasn't fair","I'd already paid my share","I had no income","it wasn't my responsibility","they knew I couldn't pay","I was barely surviving"]}
-    ]},
-   {key:"whyquiet", label:"Why didn't you push back?",
+    fields:[{key:"forced",label:"What did you feel forced to do, or not do?",ph:"Type or speak what you felt forced to do",
+      groups:[
+        {name:"What I felt I had to do",words:["just agreed","stayed quiet","paid it","signed it","went along with it","apologized"]},
+        {name:"What I felt I couldn't do",words:["couldn't say no","couldn't push back","couldn't ask questions","couldn't stand up for myself"]}
+      ]}]},
+   {navLabel:"Why didn't you push back?",
     narr:"There's no shame in the answer. It's part of what made this so hard. Pick whatever's true, or say it your own way.",
-    ph:"Type or speak why you stayed quiet",
-    groups:[
-      {name:"How I felt",words:["I was too exhausted","I was scared of them","I felt alone in it","I felt powerless","I was worn down","I was numb"]},
-      {name:"What I couldn't do",words:["I couldn't afford a lawyer","I couldn't face another fight","I couldn't risk losing the boys","I couldn't take any more stress"]}
-    ]}
+    fields:[{key:"whyquiet",label:"Why didn't you push back?",ph:"Type or speak why you stayed quiet",
+      groups:[
+        {name:"How I felt",words:["I was too exhausted","I was scared of them","I felt alone in it","I felt powerless","I was worn down","I was numb"]},
+        {name:"What I couldn't do",words:["I couldn't afford a lawyer","I couldn't face another fight","I couldn't risk losing the boys","I couldn't take any more stress"]}
+      ]}]}
   ]
  }
 ];
 
 // ---------------- STATE + AUTOSAVE ----------------
 let STATE = JSON.parse(localStorage.getItem('mb_state')||'null') ||
-            {tid:null, ans:{}, qi:0, caught:[], screen:'pick', finalText:null};
+            {tid:null, ans:{}, qi:0, caught:[], screen:'pick', finalText:null, edited:false};
 function save(){localStorage.setItem('mb_state', JSON.stringify(STATE));}
 let T=null;
 const app=document.getElementById('app');
@@ -147,15 +153,16 @@ function val(key, mode){
   return words.slice(0,-1).join(", ")+" and "+words[words.length-1];
 }
 function buildMemory(){
-  const when=val('when','space'), who=val('who'), words=val('words'),
-        how=val('how'), forced=val('forced'), real=val('real'), whyquiet=val('whyquiet');
+  const when=val('when','space'), who=val('who'), how=val('how'),
+        words=val('words'), real=val('real'), forced=val('forced'), whyquiet=val('whyquiet');
   let s="";
-  s+= when ? ("On or around "+when+", ") : "On or around [the date], ";
+  s+= "On or around "+(when||"[the date]")+", ";
   s+= (who||"[the person]")+" said or wrote: \""+(words||"[their words, as close as I remember]")+"\". ";
-  s+= how ? ("It came by "+how+". ") : "It came [how it reached me]. ";
-  s+= "At the time, I "+(forced||"[what I felt forced to do]")+", ";
-  s+= "even though "+(real||"[the truth that made it unfair]")+". ";
-  s+= "I didn't push back. "+cap(whyquiet||"[why I stayed quiet]")+".";
+  s+= how ? ("It came to me by "+how+". ") : "It came to me [how it reached me]. ";
+  s+= real ? ("Looking back, "+real+". ") : "Looking back, [what was really going on]. ";
+  s+= "At the time, I "+(forced||"[what I felt forced to do]")+". ";
+  s+= "I didn't push back because "+(whyquiet||"[why I stayed quiet]")+".";
+  s+= "\n\nI also want to add: [anything else coming back to me now].";
   return s;
 }
 
@@ -163,48 +170,50 @@ function buildMemory(){
 function renderPick(){
   STATE.screen='pick'; STATE.tid=null; save(); T=null;
   let h=`<div class="screen">
-    <p class="lead">Pick the topic that fits your memory. It walks you through, one small question at a time. Everything saves automatically.</p>`;
+    <p class="lead">Pick the corresponding number of the topic that fits your memory. It walks you through, one small question at a time. Everything saves automatically.</p>`;
   TEMPLATES.forEach(t=>{
-    h+=`<div class="blurbcard ${t.soon?'soon':''}" onclick="${t.soon?'':'startT('+t.id+')'}">
-        <h3>${t.title}${t.soon?' — coming soon':''}</h3><p>${t.blurb}</p></div>`;
+    h+=`<div class="blurbcard" onclick="startT(${t.id})">
+        <h3>${t.id}. ${t.title}</h3><p>${t.blurb}</p></div>`;
   });
-  h+=`</div>`; app.innerHTML=h; refreshBadge();
+  h+=`</div>`; app.innerHTML=h; afterRender();
 }
-function startT(id){STATE.tid=id;STATE.ans={};STATE.qi=0;STATE.finalText=null;T=TEMPLATES.find(t=>t.id===id);goQ(0);}
+function startT(id){STATE.tid=id;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.edited=false;T=TEMPLATES.find(t=>t.id===id);goQ(0);}
 
 function goQ(i){STATE.qi=i;STATE.screen='q';save();renderQuestion();}
 function renderQuestion(){
   T=TEMPLATES.find(t=>t.id===STATE.tid);
-  const q=T.questions[STATE.qi];
-  let h=`<div class="screen">
-   <div class="narr">${q.narr}</div>
-   <div class="qlabel">${q.label}</div>`;
-  (q.groups||[]).forEach(g=>{
-    h+=`<div class="groupname">${g.name}</div>`;
-    g.words.forEach(w=>{
-      const on=(STATE.ans[q.key]&&STATE.ans[q.key].includes(w))?'on':'';
-      h+=`<span class="chip ${on}" onclick="toggleWord('${q.key}',this.dataset.w)" data-w="${esc(w)}">${esc(w)}</span>`;
+  const page=T.pages[STATE.qi];
+  let h=`<div class="screen"><div class="narr">${page.narr}</div>`;
+  page.fields.forEach(f=>{
+    h+=`<div class="fieldblock">
+        <div class="qlabel">${f.label}</div>
+        ${f.note?`<div class="fnote">${f.note}</div>`:''}`;
+    (f.groups||[]).forEach(g=>{
+      h+=`<div class="groupname">${g.name}</div>`;
+      g.words.forEach(w=>{
+        const on=(STATE.ans[f.key]&&STATE.ans[f.key].includes(w))?'on':'';
+        h+=`<span class="chip ${on}" onclick="toggleWord('${f.key}',this.dataset.w)" data-w="${esc(w)}">${esc(w)}</span>`;
+      });
     });
+    h+=`<div class="typewrap">
+          <input type="text" id="txt_${f.key}" placeholder="${esc(f.ph||'Type or speak your own words')}" value="${esc(STATE.ans[f.key+'_txt']||'')}" oninput="saveTxt('${f.key}')">
+          <button class="mic" onclick="mic('${f.key}')" title="Speak">🎤</button>
+        </div></div>`;
   });
-  h+=`<div class="typewrap">
-        <input type="text" id="txt" placeholder="${esc(q.ph||'Type or speak your own words')}" value="${esc(STATE.ans[q.key+'_txt']||'')}" oninput="saveTxt('${q.key}')">
-        <button class="mic" onclick="mic('${q.key}')" title="Speak">🎤</button>
-      </div>
-      <div class="navbtns">
+  h+=`<div class="navbtns">
         ${STATE.qi>0?'<button class="b sec" onclick="goQ('+(STATE.qi-1)+')">← Back</button>':'<button class="b sec" onclick="renderPick()">← Topics</button>'}
         <button class="b skip" onclick="skipQ()">Skip</button>
-        <button class="b prim" onclick="nextQ()">${STATE.qi===T.questions.length-1?'Finish ✓':'Next →'}</button>
+        <button class="b prim" onclick="nextQ()">${STATE.qi===T.pages.length-1?'Finish ✓':'Next →'}</button>
       </div>
       <button class="jumpbtn" onclick="toggleJump()">↕ Jump to a section</button>
       <div class="jumplist" id="jl"></div>
       </div>`;
-  app.innerHTML=h; buildJump(); refreshBadge();
+  app.innerHTML=h; buildJump(); afterRender();
 }
+function pageDone(page){return page.fields.some(f=>(STATE.ans[f.key]&&STATE.ans[f.key].length)||STATE.ans[f.key+'_txt']);}
 function buildJump(){
   const jl=document.getElementById('jl');
-  let h=T.questions.map((q,i)=>{
-    const done=((STATE.ans[q.key]&&STATE.ans[q.key].length)||STATE.ans[q.key+'_txt'])?'done':'';
-    return `<div class="${done}" onclick="goQ(${i})">${q.label}</div>`;}).join('');
+  let h=T.pages.map((p,i)=>`<div class="${pageDone(p)?'done':''}" onclick="goQ(${i})">${p.navLabel}</div>`).join('');
   h+=`<div class="rev" onclick="renderDone(false)">📄 Review &amp; Copy</div>`;
   jl.innerHTML=h;
 }
@@ -214,23 +223,24 @@ function toggleWord(key,w){
   STATE.ans[key]=STATE.ans[key]||[];
   const i=STATE.ans[key].indexOf(w);
   if(i>-1)STATE.ans[key].splice(i,1); else STATE.ans[key].push(w);
-  save(); renderQuestion();
+  STATE.edited=false; save(); renderQuestion();
 }
-function saveTxt(key){STATE.ans[key+'_txt']=document.getElementById('txt').value;save();}
-function skipQ(){const k=T.questions[STATE.qi].key;delete STATE.ans[k];STATE.ans[k+'_txt']='';save();nextQ();}
-function nextQ(){ if(STATE.qi<T.questions.length-1) goQ(STATE.qi+1); else renderDone(true); }
+function saveTxt(key){STATE.ans[key+'_txt']=document.getElementById('txt_'+key).value;STATE.edited=false;save();}
+function skipQ(){T.pages[STATE.qi].fields.forEach(f=>{delete STATE.ans[f.key];STATE.ans[f.key+'_txt']='';});save();nextQ();}
+function nextQ(){ if(STATE.qi<T.pages.length-1) goQ(STATE.qi+1); else renderDone(true); }
 
 function renderDone(rebuild){
   T=TEMPLATES.find(t=>t.id===STATE.tid);
   STATE.screen='done';
-  if(rebuild || !STATE.finalText){ STATE.finalText=buildMemory(); }
+  if(rebuild || !STATE.finalText || !STATE.edited){ STATE.finalText=buildMemory(); STATE.edited=false; }
   save();
   let h=`<div class="screen">
     <div class="narr">Look what you just captured. Take a breath, that was brave. Read it over and fix anything, then copy it into your journal.</div>
+    <div class="warn">✏️ A quick heads-up: once you start editing the text below by hand, going back to change your earlier answers will no longer rewrite it. From this point on, just make any changes right here in the box.</div>
     <div class="qlabel">Your Memory — review &amp; edit before you copy</div>
     <textarea class="finaledit" id="finalEdit" oninput="saveFinal()">${esc(STATE.finalText)}</textarea>
     <div class="navbtns">
-      <button class="b sec" onclick="goQ(${T.questions.length-1})">← Edit answers</button>
+      <button class="b sec" onclick="goQ(${T.pages.length-1})">← Edit answers</button>
       <button class="b prim" onclick="copyFinal()">Copy it</button>
     </div>
     <button class="skip b" style="margin-top:10px" onclick="startAnother()">Start another memory</button>`;
@@ -238,15 +248,15 @@ function renderDone(rebuild){
     h+=`<div class="qlabel" style="margin-top:24px">💡 Memories you caught along the way</div>`;
     STATE.caught.forEach(c=>h+=`<div class="caught">${esc(c)}</div>`);
   }
-  h+=`</div>`; app.innerHTML=h; refreshBadge();
+  h+=`</div>`; app.innerHTML=h; afterRender();
 }
-function saveFinal(){STATE.finalText=document.getElementById('finalEdit').value;save();}
+function saveFinal(){STATE.finalText=document.getElementById('finalEdit').value;STATE.edited=true;save();}
 function copyFinal(){
   const text=STATE.finalText;
   navigator.clipboard.writeText(text).then(()=>toast("Copied! Paste it into your journal 💛")).catch(()=>{
     const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();toast("Copied! 💛");});
 }
-function startAnother(){STATE.tid=null;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.screen='pick';save();renderPick();}
+function startAnother(){STATE.tid=null;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.edited=false;STATE.screen='pick';save();renderPick();}
 
 // ---------------- CATCH A MEMORY ----------------
 function refreshBadge(){
@@ -259,21 +269,38 @@ function closeCatch(){document.getElementById('modal').style.display='none';docu
 function saveCatch(){const v=document.getElementById('catchInput').value.trim();if(v){STATE.caught.push(v);save();document.getElementById('catchInput').value='';drawCaught();refreshBadge();toast("Saved, you won't lose it 💛");}}
 function drawCaught(){
   const l=document.getElementById('caughtList');
-  l.innerHTML=STATE.caught.length? STATE.caught.map((c,i)=>`<div class="caught">${esc(c)} <span style="float:right;color:#b04a2a;cursor:pointer" onclick="delCaught(${i})">✕</span></div>`).join('') : `<p style="font-size:14px;color:#8a7d72;margin-top:12px">Nothing yet. Anything you jot here is saved.</p>`;
+  l.innerHTML=STATE.caught.length? STATE.caught.map((c,i)=>`<div class="caught">${esc(c)} <span style="float:right;color:#b04a2a;cursor:pointer;font-weight:800" onclick="delCaught(${i})">✕</span></div>`).join('') : `<p style="font-size:14px;color:#8a7d72;margin-top:12px">Nothing yet. Anything you jot here is saved.</p>`;
+  document.getElementById('clearAll').style.display=STATE.caught.length?'block':'none';
 }
 function delCaught(i){STATE.caught.splice(i,1);save();drawCaught();refreshBadge();}
+function clearAllCaught(){if(confirm("Clear the whole list? This can't be undone.")){STATE.caught=[];save();drawCaught();refreshBadge();}}
 
 // ---------------- MIC ----------------
 function mic(key){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){toast("Tip: tap the 🎤 on your keyboard to speak instead");return;}
   const r=new SR();r.lang='en-CA';r.onresult=e=>{
-    const box=document.getElementById('txt');
+    const box=document.getElementById('txt_'+key);
     box.value=(box.value?box.value+' ':'')+e.results[0][0].transcript;
     saveTxt(key);renderQuestion();};
   r.onerror=()=>toast("Couldn't hear you. Try the 🎤 on your keyboard");
   try{r.start();toast("Listening, speak now 🎤");}catch(e){toast("Use the 🎤 on your keyboard instead");}
 }
+
+// ---------------- KEEP CATCH BUTTON VISIBLE WHEN ZOOMED ----------------
+function positionCatch(){
+  const btn=document.getElementById('catchBtn');
+  if(!window.visualViewport||!btn) return;
+  const vv=window.visualViewport;
+  btn.style.left=(vv.offsetLeft+vv.width-btn.offsetWidth-14)+'px';
+  btn.style.top=(vv.offsetTop+vv.height-btn.offsetHeight-14)+'px';
+  btn.style.right='auto'; btn.style.bottom='auto';
+}
+if(window.visualViewport){
+  visualViewport.addEventListener('resize',positionCatch);
+  visualViewport.addEventListener('scroll',positionCatch);
+}
+function afterRender(){refreshBadge();positionCatch();}
 
 // ---------------- TOAST + INIT ----------------
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
