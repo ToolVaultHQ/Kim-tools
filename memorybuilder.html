@@ -29,8 +29,8 @@ PreviewCopy
         border:2px solid #ecc9b6;font-size:15px;cursor:pointer;user-select:none;color:#4a3f38;font-weight:600;}
   .chip.on{background:linear-gradient(135deg,#ef7d52,#d24e2a);color:#fff;border-color:#d24e2a;box-shadow:0 2px 6px rgba(210,78,42,.35);}
   .typewrap{margin:12px 0 6px;display:flex;gap:8px;align-items:center;}
-  input[type=text],textarea{flex:1;padding:12px;border:2px solid #ecc9b6;border-radius:11px;font-size:16px;font-family:inherit;color:#39312d;box-sizing:border-box;background:#fffdfb;}
-  input[type=text]:focus,textarea:focus{outline:none;border-color:#ef7d52;}
+  input[type=text],input[type=date],textarea{flex:1;padding:12px;border:2px solid #ecc9b6;border-radius:11px;font-size:16px;font-family:inherit;color:#39312d;box-sizing:border-box;background:#fffdfb;}
+  input:focus,textarea:focus{outline:none;border-color:#ef7d52;}
   .mic{padding:12px 14px;border:none;border-radius:11px;background:#f6ddca;font-size:20px;cursor:pointer;}
   .navbtns{display:flex;gap:8px;margin-top:20px;}
   button.b{flex:1;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;}
@@ -58,7 +58,7 @@ PreviewCopy
   @media(min-width:700px){
     .hdr h1{font-size:34px;} .hdr .sub{font-size:18px;}
     .lead{font-size:19px;} .narr{font-size:21px;} .warn{font-size:18px;} .qlabel{font-size:27px;} .fnote{font-size:16px;}
-    .chip{font-size:19px;padding:12px 21px;} input[type=text],textarea{font-size:20px;} .mic{font-size:24px;}
+    .chip{font-size:19px;padding:12px 21px;} input[type=text],input[type=date],textarea{font-size:20px;} .mic{font-size:24px;}
     button.b{font-size:20px;padding:16px;} .blurbcard h3{font-size:24px;} .blurbcard p{font-size:17px;}
     .groupname{font-size:15px;} .jumplist div{font-size:18px;} .catchBtn{font-size:17px;padding:15px 21px;}
   }
@@ -94,9 +94,9 @@ const TEMPLATES = [
   blurb:"For a demand, threat, or moment you felt forced to go along with something, even when it wasn't fair.",
   pages:[
    {navLabel:"When was this?",
-    narr:"Let's start with when this happened. A season or a year is plenty, and you can skip this if you're not sure.",
-    fields:[{key:"when",label:"When was this?",ph:"Type or speak the time, like \"July 15, 2021\"",
-      groups:[{name:"Season or year",words:["Spring","Summer","Fall","Winter","2018","2019","2020","2021","2022","2023","2024","2025"]}]}]},
+    narr:"Let's start with when this happened. Tap a season and year if you only remember roughly, or pick the exact date below if you know it. You can skip this if you're not sure.",
+    fields:[{key:"when",label:"When was this?",datepicker:true,
+      groups:[{name:"Roughly (season or year)",words:["Spring","Summer","Fall","Winter","2018","2019","2020","2021","2022","2023","2024","2025"]}]}]},
    {navLabel:"Who put this pressure on you?",
     narr:"Who was it that pressured you? Tap whoever fits, or add another name.",
     fields:[{key:"who",label:"Who put this pressure on you?",ph:"Type or speak another name",
@@ -135,15 +135,15 @@ const TEMPLATES = [
 
 // ---------------- STATE + AUTOSAVE ----------------
 let STATE = JSON.parse(localStorage.getItem('mb_state')||'null') ||
-            {tid:null, ans:{}, qi:0, caught:[], screen:'pick', finalText:null, addText:'', edited:false};
+            {tid:null, ans:{}, qi:0, caught:[], screen:'pick', finalText:null, addText:'', lastAppended:'', edited:false};
 if(STATE.addText===undefined) STATE.addText='';
+if(STATE.lastAppended===undefined) STATE.lastAppended='';
 function save(){localStorage.setItem('mb_state', JSON.stringify(STATE));}
 let T=null;
 const app=document.getElementById('app');
 
 // ---------------- HELPERS ----------------
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
-function cap(s){return s? s.charAt(0).toUpperCase()+s.slice(1):s;}
 function joinAnd(arr){
   if(!arr.length) return "";
   if(arr.length===1) return arr[0];
@@ -157,9 +157,13 @@ function val(key){
   return joinAnd(words);
 }
 function dateOpener(){
-  const txt=(STATE.ans['when_txt']||'').trim();
+  const iso=(STATE.ans['when_txt']||'').trim();
+  if(iso && /^\d{4}-\d{2}-\d{2}$/.test(iso)){
+    const M=["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const p=iso.split('-');
+    return "On "+M[parseInt(p[1],10)-1]+" "+parseInt(p[2],10)+", "+p[0]+", ";
+  }
   const chips=(STATE.ans['when']||[]).slice();
-  if(txt) return "On "+txt+", ";
   if(!chips.length) return "On or around [the date], ";
   const seasons=["Spring","Summer","Fall","Winter"];
   const s=chips.filter(c=>seasons.includes(c)).map(x=>x.toLowerCase());
@@ -198,11 +202,12 @@ function buildMemory(){
   s+= "I didn't push back because "+(whyquiet||"[why I stayed quiet]")+".";
   return s;
 }
-function fullCopy(){
-  let t=STATE.finalText||"";
-  const add=(STATE.addText||"").trim();
-  if(add) t+= "\n\nI also want to add: "+add;
-  return t;
+function addSentence(){
+  const t=(STATE.addText||'').trim();
+  if(!t) return '';
+  let x=t.charAt(0).toLowerCase()+t.slice(1);
+  if(!/[.!?]$/.test(x)) x+='.';
+  return "\n\nI also want to add that "+x;
 }
 
 // ---------------- SCREENS ----------------
@@ -216,7 +221,7 @@ function renderPick(){
   });
   h+=`</div>`; app.innerHTML=h; afterRender();
 }
-function startT(id){STATE.tid=id;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.edited=false;T=TEMPLATES.find(t=>t.id===id);goQ(0);}
+function startT(id){STATE.tid=id;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.lastAppended='';STATE.edited=false;T=TEMPLATES.find(t=>t.id===id);goQ(0);}
 
 function goQ(i){STATE.qi=i;STATE.screen='q';save();renderQuestion();}
 function renderQuestion(){
@@ -232,10 +237,18 @@ function renderQuestion(){
         h+=`<span class="chip ${on}" onclick="toggleWord('${f.key}',this.dataset.w)" data-w="${esc(w)}">${esc(w)}</span>`;
       });
     });
-    h+=`<div class="typewrap">
-          <input type="text" id="txt_${f.key}" placeholder="${esc(f.ph||'Type or speak your own words')}" value="${esc(STATE.ans[f.key+'_txt']||'')}" oninput="saveTxt('${f.key}')">
-          <button class="mic" onclick="mic('${f.key}')" title="Speak">🎤</button>
-        </div></div>`;
+    if(f.datepicker){
+      h+=`<div class="typewrap">
+            <input type="date" id="txt_${f.key}" value="${esc(STATE.ans[f.key+'_txt']||'')}" oninput="saveTxt('${f.key}')">
+          </div>
+          <div class="fnote">Know the exact day? Pick it here. If not, just tap a season and year above.</div>`;
+    } else {
+      h+=`<div class="typewrap">
+            <input type="text" id="txt_${f.key}" placeholder="${esc(f.ph||'Type or speak your own words')}" value="${esc(STATE.ans[f.key+'_txt']||'')}" oninput="saveTxt('${f.key}')">
+            <button class="mic" onclick="mic('${f.key}')" title="Speak">🎤</button>
+          </div>`;
+    }
+    h+=`</div>`;
   });
   h+=`<div class="navbtns">
         ${STATE.qi>0?'<button class="b sec" onclick="goQ('+(STATE.qi-1)+')">← Back</button>':'<button class="b sec" onclick="renderPick()">← Topics</button>'}
@@ -269,19 +282,25 @@ function nextQ(){ if(STATE.qi<T.pages.length-1) goQ(STATE.qi+1); else renderDone
 function renderDone(rebuild){
   T=TEMPLATES.find(t=>t.id===STATE.tid);
   STATE.screen='done';
-  if(rebuild || !STATE.finalText || !STATE.edited){ STATE.finalText=buildMemory(); STATE.edited=false; }
+  if(rebuild || !STATE.finalText || !STATE.edited){
+    STATE.finalText=buildMemory();
+    const s=addSentence();
+    STATE.finalText+=s;
+    STATE.lastAppended=s;
+    STATE.edited=false;
+  }
   save();
   let h=`<div class="screen">
     <div class="narr">Look what you just captured. Take a breath, that was brave. Read it over and fix anything, then copy it into your journal.</div>
     <div class="warn">✏️ A quick heads-up: once you start editing the text below by hand, going back to change your earlier answers will no longer rewrite it. From this point on, just make any changes right here in the box.</div>
     <div class="qlabel">Your Memory — review &amp; edit before you copy</div>
     <textarea class="finaledit" id="finalEdit" oninput="saveFinal()">${esc(STATE.finalText)}</textarea>
-    <div class="qlabel" style="font-size:16px;margin-top:16px">I also want to add: <span style="font-weight:500;color:#7a6a5f">(anything else I remember)</span></div>
+    <div class="qlabel" style="font-size:16px;margin-top:16px">I also want to add… <span style="font-weight:500;color:#7a6a5f">(anything else you remember)</span></div>
     <div class="typewrap">
       <textarea class="addbox" id="addBox" placeholder="Type or speak anything else that's coming back to you" oninput="saveAdd()">${esc(STATE.addText)}</textarea>
       <button class="mic" onclick="micAdd()" title="Speak">🎤</button>
     </div>
-    <div class="fnote">Whatever you write here is automatically added to the end of your memory when you copy it.</div>
+    <div class="fnote">Whatever you write here is added to the end of your memory above. Review and edit it all up there, then copy it and paste it into your journal under "What happened."</div>
     <div class="navbtns">
       <button class="b sec" onclick="goQ(${T.pages.length-1})">← Edit answers</button>
       <button class="b prim" onclick="copyFinal()">Copy it</button>
@@ -294,13 +313,25 @@ function renderDone(rebuild){
   h+=`</div>`; app.innerHTML=h; afterRender();
 }
 function saveFinal(){STATE.finalText=document.getElementById('finalEdit').value;STATE.edited=true;save();}
-function saveAdd(){STATE.addText=document.getElementById('addBox').value;save();}
+function saveAdd(){
+  STATE.addText=document.getElementById('addBox').value;
+  let base=STATE.finalText||'';
+  if(STATE.lastAppended && base.endsWith(STATE.lastAppended)){
+    base=base.slice(0, base.length-STATE.lastAppended.length);
+  }
+  const s=addSentence();
+  STATE.finalText=base+s;
+  STATE.lastAppended=s;
+  const box=document.getElementById('finalEdit');
+  if(box) box.value=STATE.finalText;
+  save();
+}
 function copyFinal(){
-  const text=fullCopy();
+  const text=STATE.finalText;
   navigator.clipboard.writeText(text).then(()=>toast("Copied! Paste it into your journal 💛")).catch(()=>{
     const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();toast("Copied! 💛");});
 }
-function startAnother(){STATE.tid=null;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.edited=false;STATE.screen='pick';save();renderPick();}
+function startAnother(){STATE.tid=null;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.lastAppended='';STATE.edited=false;STATE.screen='pick';save();renderPick();}
 
 // ---------------- CATCH A MEMORY ----------------
 function refreshBadge(){
