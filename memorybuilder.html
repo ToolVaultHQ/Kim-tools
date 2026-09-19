@@ -330,7 +330,8 @@ function saveAdd(){
   save();
 }
 function copyFinal(){
-  const text=STATE.finalText;
+  const box=document.getElementById('finalEdit');
+  const text=box?box.value:STATE.finalText;
   navigator.clipboard.writeText(text).then(()=>toast("Copied! Paste it into your journal 💛")).catch(()=>{
     const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();toast("Copied! 💛");});
 }
