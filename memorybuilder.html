@@ -294,10 +294,10 @@ function renderDone(rebuild){
     <div class="narr">Look what you just captured. Take a breath, that was brave. Read it over and fix anything, then copy it into your journal.</div>
     <div class="warn">✏️ A quick heads-up: once you start editing the text below by hand, going back to change your earlier answers will no longer rewrite it. From this point on, just make any changes right here in the box.</div>
     <div class="qlabel">Your Memory — review &amp; edit before you copy</div>
-    <textarea class="finaledit" id="finalEdit" oninput="saveFinal()">${esc(STATE.finalText)}</textarea>
+    <textarea class="finaledit" id="finalEdit" spellcheck="true" autocorrect="on" autocapitalize="sentences" oninput="saveFinal()">${esc(STATE.finalText)}</textarea>
     <div class="qlabel" style="font-size:16px;margin-top:16px">I also want to add… <span style="font-weight:500;color:#7a6a5f">(anything else you remember)</span></div>
     <div class="typewrap">
-      <textarea class="addbox" id="addBox" placeholder="Type or speak anything else that's coming back to you" oninput="saveAdd()">${esc(STATE.addText)}</textarea>
+      <textarea class="addbox" id="addBox" spellcheck="true" autocorrect="on" autocapitalize="sentences" placeholder="Type or speak anything else that's coming back to you" oninput="saveAdd()">${esc(STATE.addText)}</textarea>
       <button class="mic" onclick="micAdd()" title="Speak">🎤</button>
     </div>
     <div class="fnote">Whatever you write here is added to the end of your memory above. Review and edit it all up there, then copy it and paste it into your journal under "What happened."</div>
