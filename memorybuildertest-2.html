@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Builder</title>
+<style>
+  html,body{overscroll-behavior-y:contain;}
+  body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#fdf5ec;color:#39312d;}
+  .hdr{background:linear-gradient(135deg,#ef7d52 0%,#c9633f 45%,#8a3a63 100%);color:#fff;padding:20px 16px;text-align:center;box-shadow:0 2px 10px rgba(120,50,80,.25);}
+  .hdr h1{margin:0;font-size:23px;font-weight:900;letter-spacing:.3px;}
+  .hdr .sub{font-size:14px;opacity:.96;margin-top:5px;font-weight:600;}
+  .screen{max-width:660px;margin:0 auto;padding:16px 16px 150px;}
+  .lead{text-align:center;font-size:15px;color:#6b5f56;line-height:1.55;margin:14px 0;font-weight:600;}
+  .blurbcard{background:#fff;border-left:7px solid #ef7d52;border-radius:13px;padding:16px;margin:14px 0;
+             cursor:pointer;box-shadow:0 3px 10px rgba(150,80,60,.12);}
+  .blurbcard h3{margin:0 0 6px;font-size:19px;font-weight:900;color:#8a3a63;}
+  .blurbcard p{margin:0;font-size:14.5px;color:#5f544c;line-height:1.5;}
+  .narr{background:#fff0e4;border-left:6px solid #ef7d52;border-radius:11px;padding:14px 16px;margin:14px 0;
+        font-size:16px;line-height:1.6;color:#5a463c;font-weight:500;}
+  .warn{background:#fbe9d4;border:2px solid #e0a04f;border-radius:11px;padding:12px 15px;margin:14px 0;
+        font-size:14.5px;line-height:1.55;color:#8a5320;font-weight:600;}
+  .qlabel{font-size:20px;font-weight:900;color:#8a3a63;margin:14px 0 5px;}
+  .fnote{font-size:13.5px;color:#7a6a5f;margin:0 0 8px;line-height:1.5;font-weight:500;}
+  .groupname{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:#b05a3a;font-weight:800;margin:14px 0 6px;}
+  .chip{display:inline-block;margin:5px;padding:9px 16px;border-radius:22px;background:#fff;
+        border:2px solid #ecc9b6;font-size:15px;cursor:pointer;user-select:none;color:#4a3f38;font-weight:600;}
+  .chip.on{background:linear-gradient(135deg,#ef7d52,#d24e2a);color:#fff;border-color:#d24e2a;box-shadow:0 2px 6px rgba(210,78,42,.35);}
+  .typewrap{margin:12px 0 6px;display:flex;gap:8px;align-items:center;}
+  input[type=text],input[type=date],textarea{flex:1;padding:12px;border:2px solid #ecc9b6;border-radius:11px;font-size:16px;font-family:inherit;color:#39312d;box-sizing:border-box;background:#fffdfb;}
+  input:focus,textarea:focus{outline:none;border-color:#ef7d52;}
+  .mic{padding:12px 14px;border:none;border-radius:11px;background:#f6ddca;font-size:20px;cursor:pointer;}
+  .navbtns{display:flex;gap:8px;margin-top:20px;}
+  button.b{flex:1;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;}
+  .prim{background:linear-gradient(135deg,#ef7d52,#c9633f);color:#fff;box-shadow:0 3px 8px rgba(201,99,63,.3);}
+  .sec{background:#f6ddca;color:#8a5320;} .skip{background:#e3edde;color:#48674a;}
+  .jumpbtn{display:block;width:100%;margin:12px 0 0;padding:11px;border:2px dashed #ef7d52;border-radius:11px;
+           background:#fff;color:#8a3a63;font-size:14px;font-weight:800;cursor:pointer;}
+  .jumplist{background:#fff;border:2px solid #ecc9b6;border-radius:12px;padding:8px;margin-top:6px;display:none;}
+  .jumplist div{padding:11px 10px;border-radius:8px;font-size:15px;cursor:pointer;font-weight:600;}
+  .jumplist div:active{background:#fbeee4;}
+  .jumplist .done::before{content:"✅ ";}
+  .jumplist .rev{color:#8a3a63;font-weight:900;border-top:1px solid #eaddd2;margin-top:4px;}
+  .finaledit{width:100%;min-height:230px;line-height:1.6;font-size:16px;}
+  .addbox{min-height:70px;}
+  .catchBtn{position:fixed;bottom:18px;right:14px;background:linear-gradient(135deg,#5f9a6a,#4f8a6b);color:#fff;border:none;border-radius:28px;
+            padding:13px 18px;font-size:14px;font-weight:800;box-shadow:0 4px 14px rgba(0,0,0,.28);cursor:pointer;z-index:50;}
+  .badge{background:#fff;color:#4f8a6b;border-radius:12px;padding:1px 8px;margin-left:6px;font-size:13px;font-weight:900;}
+  .modal{position:fixed;inset:0;background:rgba(60,30,45,.5);display:none;align-items:center;justify-content:center;z-index:60;padding:20px;}
+  .modalbox{background:#fff;border-radius:17px;padding:20px;max-width:440px;width:100%;max-height:80vh;overflow:auto;}
+  .caught{background:#e3edde;border-radius:10px;padding:11px 13px;margin-top:9px;font-size:15px;}
+  .clearall{background:none;border:none;color:#b04a2a;font-weight:800;font-size:14px;margin-top:12px;cursor:pointer;}
+  .toast{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);background:#39312d;color:#fff;
+         padding:11px 18px;border-radius:22px;font-size:14px;opacity:0;transition:.3s;z-index:70;text-align:center;max-width:90%;}
+  .toast.show{opacity:1;}
+  @media(min-width:700px){
+    .hdr h1{font-size:34px;} .hdr .sub{font-size:18px;}
+    .lead{font-size:19px;} .narr{font-size:21px;} .warn{font-size:18px;} .qlabel{font-size:27px;} .fnote{font-size:16px;}
+    .chip{font-size:19px;padding:12px 21px;} input[type=text],input[type=date],textarea{font-size:20px;} .mic{font-size:24px;}
+    button.b{font-size:20px;padding:16px;} .blurbcard h3{font-size:24px;} .blurbcard p{font-size:17px;}
+    .groupname{font-size:15px;} .jumplist div{font-size:18px;} .catchBtn{font-size:17px;padding:15px 21px;}
+  }
+</style>
+</head>
+<body>
+<div class="hdr"><h1>Memory Builder 🌿</h1><div class="sub">One small step at a time. Nothing gets lost.</div></div>
+<div id="app"></div>
+
+<button class="catchBtn" id="catchBtn" onclick="openCatch()">💡 Catch a memory<span class="badge" id="catchBadge" style="display:none">0</span></button>
+
+<div class="modal" id="modal">
+  <div class="modalbox">
+    <div class="qlabel">💡 Memories to come back to</div>
+    <p style="font-size:14px;color:#6b5f56;line-height:1.5;">A memory popped up? Jot a few words so you don't lose it. These stay saved here and show at the end of your memory. They stay even after you start another memory, until you delete them.</p>
+    <input type="text" id="catchInput" placeholder="e.g. the day the lawyer's letter came">
+    <div class="navbtns">
+      <button class="b sec" onclick="closeCatch()">Close</button>
+      <button class="b prim" onclick="saveCatch()">Save it</button>
+    </div>
+    <div id="caughtList"></div>
+    <button class="clearall" id="clearAll" style="display:none" onclick="clearAllCaught()">🗑 Clear the whole list</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Saved 💛</div>
+
+<script>
+// ---------------- SHARED "WHEN" PAGE ----------------
+const WHEN_PAGE = {navLabel:"When was this?",
+  narr:"Let's start with when this happened. Tap a season and year if you only remember roughly, or pick the exact date below if you know it. You can skip this if you're not sure.",
+  fields:[{key:"when",label:"When was this?",datepicker:true,
+    groups:[{name:"Roughly (season or year)",words:["Spring","Summer","Fall","Winter","2018","2019","2020","2021","2022","2023","2024","2025"]}]}]};
+
+// ---------------- DATA: 5 TEMPLATES ----------------
+const TEMPLATES = [
+ // ---------- #6 MONEY & SACRIFICE ----------
+ {
+  id:6, title:"Money & Sacrifice",
+  blurb:"For a time you sold, borrowed, or went without to keep up, and what it cost you.",
+  pages:[
+   WHEN_PAGE,
+   {navLabel:"What did you have to do?",
+    narr:"What did you have to do to keep up? Tap what fits, or add your own.",
+    fields:[{key:"action",label:"What did you have to do?",ph:"Type or speak what you had to do",
+      groups:[{name:"I had to…",words:["sell my house","withdraw from my pension","borrow money","take out a second mortgage","drain my savings","go without"]}]}]},
+   {navLabel:"Why did you have to?",
+    narr:"Why did you have to do that? Tap whatever's true.",
+    fields:[{key:"reason",label:"Why did you have to?",ph:"Type or speak the reason",
+      groups:[{name:"Because…",words:["I couldn't keep up with support","I had to cover rent","I was just trying to survive","I had to pay the boys' expenses","I had to pay off debts","I had no income"]}]}]},
+   {navLabel:"How much was it?",
+    narr:"Roughly how much was it? A ballpark number is perfect, you can always fix it later.",
+    fields:[{key:"amount",label:"How much was it, roughly?",note:"A rough number is fine, like $40,000.",ph:"Type or speak the amount",groups:[]}]},
+   {navLabel:"Where did the money go?",
+    narr:"Where did that money go? Tap any that fit.",
+    fields:[{key:"wentto",label:"Where did the money go?",ph:"Type or speak where it went",
+      groups:[{name:"It went toward…",words:["support payments","rent","debts","the boys' expenses","groceries","essentials to survive"]}]}]},
+   {navLabel:"What did you give up?",
+    narr:"What did you have to give up along the way?",
+    fields:[{key:"gaveup",label:"What did you give up?",ph:"Type or speak what you gave up",
+      groups:[{name:"I gave up…",words:["my savings","my home","my retirement","my security","my safety net","everything I had"]}]}]},
+   {navLabel:"What were you thinking?",
+    narr:"What were you thinking at the time? Say it the way it felt.",
+    fields:[{key:"thought",label:"What were you thinking at the time?",note:"This goes in quotes, as your own thought.",ph:"Type or speak your thought",
+      groups:[{name:"I was thinking…",words:["I have no choice","this is everything I had","I'm terrified","I just have to survive","how did it come to this"]}]}]}
+  ],
+  build:function(){
+    const when=dateOpener();
+    const action=val('action')||"[what I had to do]";
+    const reason=val('reason')||"[the reason]";
+    const amount=val('amount'), wentto=val('wentto'), gaveup=val('gaveup'), thought=val('thought');
+    let s=when+"I had to "+action+" because "+reason+". ";
+    if(amount) s+="It came to about "+amount+". ";
+    if(wentto) s+="That money went toward "+wentto+". ";
+    if(gaveup) s+="To get through it, I gave up "+gaveup+". ";
+    if(thought) s+="I remember thinking, \""+thought+"\".";
+    return s.trim();
+  }
+ },
+
+ // ---------- #7 A MOMENT THAT FELT LIKE PRESSURE ----------
+ {
+  id:7, title:"A Moment That Felt Like Pressure",
+  blurb:"For a demand, threat, or moment you felt forced to go along with something, even when it wasn't fair.",
+  pages:[
+   WHEN_PAGE,
+   {navLabel:"Who put this pressure on you?",
+    narr:"Who was it that pressured you? Tap whoever fits, or add another name.",
+    fields:[{key:"who",label:"Who put this pressure on you?",ph:"Type or speak another name",
+      groups:[{name:"From",words:["Sandra","Joe","Joe and Sandra","their lawyer","a lawyer's letter","FRO","Joe's family"]}]}]},
+   {navLabel:"How did the message reach you?",
+    narr:"How did it come to you?",
+    fields:[{key:"how",label:"How did the message reach you?",ph:"Type or speak how it reached you",
+      groups:[{name:"It came by",words:["text","email","a phone call","voicemail","a lawyer's letter","in person","through the boys","social media"]}]}]},
+   {navLabel:"What did they say or write?",
+    narr:"This is the heart of the memory. Write what they said as close as you remember. Even a few words is enough.",
+    fields:[{key:"words",label:"What did they say or write?",note:"As close as you remember is perfect.",ph:"Type or speak their exact words",groups:[]}]},
+   {navLabel:"What was really going on?",
+    narr:"Now the truth underneath, the part that made it unfair. This part is best in your own words, so tell it how it really was. Tap an example to get started, or type or speak your own.",
+    fields:[{key:"real",label:"What was really going on?",ph:"Type or speak the truth in your own words",
+      groups:[
+        {name:"The power behind it",words:["it was intimidating","they were showing their power","they were setting their own rules","I was being bullied","my voice was being taken away","I wasn't being given a choice","I was pressured to do it their way"]},
+        {name:"My real situation",words:["I couldn't afford it","it wasn't fair","I'd already paid my share","I had no income","it wasn't my responsibility","I was barely surviving"]}
+      ]}]},
+   {navLabel:"What did you feel forced to do?",
+    narr:"In that moment, what did you feel you had no choice about? Tap any that fit, or add your own.",
+    fields:[{key:"forced",label:"What did you feel forced to do, or not do?",ph:"Type or speak what you felt forced to do",
+      groups:[
+        {name:"What I felt I had to do",words:["just agreed","stayed quiet","paid it","signed it","went along with it","apologized"]},
+        {name:"What I felt I couldn't do",words:["couldn't say no","couldn't push back","couldn't ask questions","couldn't stand up for myself"]}
+      ]}]},
+   {navLabel:"Why didn't you push back?",
+    narr:"There's no shame in the answer. It's part of what made this so hard. Pick whatever's true, or say it your own way.",
+    fields:[{key:"whyquiet",label:"Why didn't you push back?",ph:"Type or speak why you stayed quiet",
+      groups:[
+        {name:"How I felt",words:["I was too exhausted","I was scared of them","I felt alone in it","I felt powerless","I was worn down","I was numb"]},
+        {name:"What I couldn't do",words:["I couldn't afford a lawyer","I couldn't face another fight","I couldn't risk losing the boys","I couldn't take any more stress"]}
+      ]}]}
+  ],
+  build:function(){
+    const who=val('who'), words=val('words'), real=val('real'), forced=val('forced'), whyquiet=val('whyquiet');
+    let s=dateOpener();
+    s+=(who||"[the person]")+" "+deliveryPhrase()+": \""+(words||"[their words, as close as I remember]")+"\". ";
+    s+= real ? ("Looking back, "+real+". ") : "Looking back, [what was really going on]. ";
+    s+= "At the time, I "+(forced||"[what I felt forced to do]")+". ";
+    s+= "I didn't push back because "+(whyquiet||"[why I stayed quiet]")+".";
+    return s;
+  }
+ },
+
+ // ---------- #8 BEING PUSHED ASIDE AS THEIR MOM ----------
+ {
+  id:8, title:"Being Pushed Aside as Their Mom",
+  blurb:"For a decision about the boys where your voice was left out or overruled.",
+  pages:[
+   WHEN_PAGE,
+   {navLabel:"What was the decision about?",
+    narr:"What was the decision about? Tap what fits, or add your own.",
+    fields:[{key:"decision",label:"What was the decision about?",note:"This reads as \"a decision about the boys' ___\".",ph:"Type or speak what it was about",
+      groups:[{name:"The boys'…",words:["medical care","therapy","vaccinations","schooling","counselling","emergency contacts","health care"]}]}]},
+   {navLabel:"What happened to your role?",
+    narr:"What happened to your role as their mom in that decision?",
+    fields:[{key:"role",label:"What happened to your role?",ph:"Type or speak what happened",
+      groups:[{name:"And I…",words:["wasn't asked","found out afterward","was overruled","was left out completely","had no say","wasn't even told"]}]}]},
+   {navLabel:"Who handled it?",
+    narr:"Who handled it instead of you?",
+    fields:[{key:"who",label:"Who handled it?",ph:"Type or speak who handled it",
+      groups:[{name:"Handled by",words:["Sandra","Joe","Joe and Sandra","their household"]}]}]},
+   {navLabel:"What actually happened?",
+    narr:"Tell what actually happened, in your own words. This is the heart of the memory.",
+    fields:[{key:"facts",label:"What actually happened?",note:"Plain facts are perfect, in order.",ph:"Type or speak what happened",groups:[]}]},
+   {navLabel:"What would you have chosen?",
+    narr:"What would you have chosen, as their mom? Tap an example or say your own.",
+    fields:[{key:"wanted",label:"What would you have chosen as their mom?",ph:"Type or speak what you'd have wanted",
+      groups:[{name:"I would have wanted…",words:["to be included","to be asked first","a say in it","to make that choice together"]}]}]}
+  ],
+  build:function(){
+    const when=dateOpener();
+    const decision=val('decision')||"[what it was about]";
+    const role=val('role')||"[what happened to my role]";
+    const who=val('who'), facts=val('facts'), wanted=val('wanted');
+    let s=when+"a decision was made about the boys' "+decision+", and I "+role+". ";
+    if(who) s+="It was handled by "+who+". ";
+    if(facts) s+="Here is what actually happened: "+facts+". ";
+    if(wanted) s+="As their mom, I would have wanted "+wanted+".";
+    return s.trim();
+  }
+ },
+
+ // ---------- #13 WHEN I FELT CONTROLLED OR INTIMIDATED ----------
+ {
+  id:13, title:"When I Felt Controlled or Intimidated",
+  blurb:"For the subtle pressure and control, times you were made to feel you had no choice.",
+  pages:[
+   WHEN_PAGE,
+   {navLabel:"Who made you feel this way?",
+    narr:"Who made you feel controlled or pushed into things? Tap whoever fits.",
+    fields:[{key:"who",label:"Who made you feel this way?",ph:"Type or speak another name",
+      groups:[{name:"From",words:["Sandra","Joe","Joe and Sandra","their lawyer","FRO"]}]}]},
+   {navLabel:"How did it show up?",
+    narr:"How did it show up? Tap any that fit, or add your own.",
+    fields:[{key:"how",label:"How did it show up?",ph:"Type or speak how it showed up",
+      groups:[{name:"It showed up as",words:["a cold or cutting message","being talked down to","decisions made without me","being made to feel I had no say","guilt and pressure","being shut out","rules I had to follow"]}]}]},
+   {navLabel:"What happened?",
+    narr:"Tell what happened, in your own words. This is the heart of the memory.",
+    fields:[{key:"what",label:"What happened?",note:"As much or as little as you remember.",ph:"Type or speak what happened",groups:[]}]},
+   {navLabel:"What did you end up doing?",
+    narr:"In that moment, what did you end up doing?",
+    fields:[{key:"felt",label:"What did you end up doing?",ph:"Type or speak what you did",
+      groups:[{name:"In the end, I…",words:["gave in","stayed quiet","felt small","felt powerless","didn't dare push back","did what they wanted"]}]}]},
+   {navLabel:"Why couldn't you stand up to it?",
+    narr:"Why couldn't you stand up to it? There's no shame in the answer.",
+    fields:[{key:"why",label:"Why couldn't you stand up to it?",ph:"Type or speak why",
+      groups:[{name:"Because…",words:["I was scared of them","I couldn't afford a fight","I felt alone","I was worn down","I didn't want to make it worse","I couldn't take any more stress"]}]}]}
+  ],
+  build:function(){
+    const when=dateOpener();
+    const who=val('who')||"[who]";
+    const how=val('how'), what=val('what'), felt=val('felt'), why=val('why');
+    let s=when+"I felt controlled by "+who+". ";
+    if(how) s+="It showed up as "+how+". ";
+    if(what) s+="Here is what happened: "+what+". ";
+    s+= "In the end, I "+(felt||"[what I did]");
+    s+= why ? (", because "+why+".") : ".";
+    return s.trim();
+  }
+ },
+
+ // ---------- #15 MOMENTS THE BOYS SHOWED THEIR LOVE ----------
+ {
+  id:15, title:"Moments the Boys Showed Their Love",
+  blurb:"For the ways Nick or Josh stayed close, small signs of a bond no one could break.",
+  pages:[
+   WHEN_PAGE,
+   {navLabel:"Which of the boys?",
+    narr:"Which of the boys was this? Tap one, or choose both.",
+    fields:[{key:"who",label:"Which of the boys?",ph:"Type or speak a name",
+      groups:[{name:"This was",words:["Nick","Josh","both boys","my boys"]}]}]},
+   {navLabel:"How did they stay close?",
+    narr:"How did they stay close to you? Tap any that fit.",
+    fields:[{key:"how",label:"How did they stay close?",ph:"Type or speak how",
+      groups:[{name:"They…",words:["came to visit me","FaceTimed me","texted me","messaged me on their tablets","came to me when it mattered","made time for me","reached out to me"]}]}]},
+   {navLabel:"Tell the moment",
+    narr:"Tell the moment in your own words. Even a small one matters.",
+    fields:[{key:"what",label:"What happened? Tell the moment.",note:"A small moment is just as powerful.",ph:"Type or speak the moment",groups:[]}]},
+   {navLabel:"What did it show you?",
+    narr:"What did that moment show you?",
+    fields:[{key:"showed",label:"What did it show you?",ph:"Type or speak what it showed you",
+      groups:[{name:"It showed me that…",words:["they still chose me","our bond was never broken","they knew I loved them","no one could take them from me","they wanted me in their lives"]}]}]}
+  ],
+  build:function(){
+    const when=dateOpener();
+    const who=val('who')||"[which boy]";
+    const how=val('how')||"[how they stayed close]";
+    const what=val('what'), showed=val('showed');
+    let s=when+who+" "+how+". ";
+    if(what) s+=what+". ";
+    if(showed) s+="It showed me that "+showed+".";
+    return s.trim();
+  }
+ }
+];
+
+// ---------------- STATE + AUTOSAVE ----------------
+let STATE = JSON.parse(localStorage.getItem('mb_state')||'null') ||
+            {tid:null, ans:{}, qi:0, caught:[], screen:'pick', finalText:null, addText:'', lastAppended:'', edited:false};
+if(STATE.addText===undefined) STATE.addText='';
+if(STATE.lastAppended===undefined) STATE.lastAppended='';
+function save(){localStorage.setItem('mb_state', JSON.stringify(STATE));}
+let T=null;
+const app=document.getElementById('app');
+
+// ---------------- HELPERS ----------------
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+function joinAnd(arr){
+  if(!arr.length) return "";
+  if(arr.length===1) return arr[0];
+  if(arr.length===2) return arr[0]+" and "+arr[1];
+  return arr.slice(0,-1).join(", ")+" and "+arr[arr.length-1];
+}
+function val(key){
+  const words=(STATE.ans[key]||[]).slice();
+  const txt=(STATE.ans[key+'_txt']||'').trim();
+  if(txt) words.push(txt);
+  return joinAnd(words);
+}
+function dateOpener(){
+  const iso=(STATE.ans['when_txt']||'').trim();
+  if(iso && /^\d{4}-\d{2}-\d{2}$/.test(iso)){
+    const M=["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const p=iso.split('-');
+    return "On "+M[parseInt(p[1],10)-1]+" "+parseInt(p[2],10)+", "+p[0]+", ";
+  }
+  const chips=(STATE.ans['when']||[]).slice();
+  if(!chips.length) return "On or around [the date], ";
+  const seasons=["Spring","Summer","Fall","Winter"];
+  const s=chips.filter(c=>seasons.includes(c)).map(x=>x.toLowerCase());
+  const y=chips.filter(c=>!seasons.includes(c));
+  if(s.length&&y.length) return "Around the "+joinAnd(s)+" of "+joinAnd(y)+", ";
+  if(s.length) return "Around the "+joinAnd(s)+", ";
+  if(y.length) return "Around "+joinAnd(y)+", ";
+  return "On or around [the date], ";
+}
+function deliveryPhrase(){
+  const chips=(STATE.ans['how']||[]);
+  const txt=(STATE.ans['how_txt']||'').trim();
+  const MAP={
+    "text":"sent a text and wrote","email":"sent an email and wrote",
+    "a lawyer's letter":"sent a lawyer's letter that read","social media":"messaged me on social media and wrote",
+    "a phone call":"called and said","voicemail":"left a voicemail saying",
+    "in person":"told me in person","through the boys":"sent word through the boys, saying"
+  };
+  if(chips.length===1 && !txt && MAP[chips[0]]) return MAP[chips[0]];
+  const how=val('how');
+  if(how) return "reached out by "+how+" and said";
+  return "said or wrote";
+}
+function buildMemory(){ const t=TEMPLATES.find(x=>x.id===STATE.tid); return t.build(); }
+function addSentence(){
+  const t=(STATE.addText||'').trim();
+  if(!t) return '';
+  let x=t.charAt(0).toLowerCase()+t.slice(1);
+  if(!/[.!?]$/.test(x)) x+='.';
+  return "\n\nI also want to add that "+x;
+}
+
+// ---------------- SCREENS ----------------
+function renderPick(){
+  STATE.screen='pick'; STATE.tid=null; save(); T=null;
+  let h=`<div class="screen">
+    <p class="lead">Pick the corresponding number of the topic that fits your memory. It walks you through, one small question at a time. Everything saves automatically.</p>`;
+  TEMPLATES.forEach(t=>{
+    h+=`<div class="blurbcard" onclick="startT(${t.id})">
+        <h3>${t.id}. ${t.title}</h3><p>${t.blurb}</p></div>`;
+  });
+  h+=`</div>`; app.innerHTML=h; afterRender();
+}
+function startT(id){STATE.tid=id;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.lastAppended='';STATE.edited=false;T=TEMPLATES.find(t=>t.id===id);goQ(0);}
+
+function goQ(i){STATE.qi=i;STATE.screen='q';save();renderQuestion();}
+function renderQuestion(){
+  T=TEMPLATES.find(t=>t.id===STATE.tid);
+  const page=T.pages[STATE.qi];
+  let h=`<div class="screen"><div class="narr">${page.narr}</div>`;
+  page.fields.forEach(f=>{
+    h+=`<div><div class="qlabel">${f.label}</div>${f.note?`<div class="fnote">${f.note}</div>`:''}`;
+    (f.groups||[]).forEach(g=>{
+      h+=`<div class="groupname">${g.name}</div>`;
+      g.words.forEach(w=>{
+        const on=(STATE.ans[f.key]&&STATE.ans[f.key].includes(w))?'on':'';
+        h+=`<span class="chip ${on}" onclick="toggleWord('${f.key}',this.dataset.w)" data-w="${esc(w)}">${esc(w)}</span>`;
+      });
+    });
+    if(f.datepicker){
+      h+=`<div class="typewrap">
+            <input type="date" id="txt_${f.key}" value="${esc(STATE.ans[f.key+'_txt']||'')}" oninput="saveTxt('${f.key}')">
+          </div>
+          <div class="fnote">Know the exact day? Pick it here. If not, just tap a season and year above.</div>`;
+    } else {
+      h+=`<div class="typewrap">
+            <input type="text" id="txt_${f.key}" placeholder="${esc(f.ph||'Type or speak your own words')}" value="${esc(STATE.ans[f.key+'_txt']||'')}" oninput="saveTxt('${f.key}')">
+            <button class="mic" onclick="mic('${f.key}')" title="Speak">🎤</button>
+          </div>`;
+    }
+    h+=`</div>`;
+  });
+  h+=`<div class="navbtns">
+        ${STATE.qi>0?'<button class="b sec" onclick="goQ('+(STATE.qi-1)+')">← Back</button>':'<button class="b sec" onclick="renderPick()">← Topics</button>'}
+        <button class="b skip" onclick="skipQ()">Skip</button>
+        <button class="b prim" onclick="nextQ()">${STATE.qi===T.pages.length-1?'Finish ✓':'Next →'}</button>
+      </div>
+      <button class="jumpbtn" onclick="toggleJump()">↕ Jump to a section</button>
+      <div class="jumplist" id="jl"></div>
+      </div>`;
+  app.innerHTML=h; buildJump(); afterRender();
+}
+function pageDone(page){return page.fields.some(f=>(STATE.ans[f.key]&&STATE.ans[f.key].length)||STATE.ans[f.key+'_txt']);}
+function buildJump(){
+  const jl=document.getElementById('jl');
+  let h=T.pages.map((p,i)=>`<div class="${pageDone(p)?'done':''}" onclick="goQ(${i})">${p.navLabel}</div>`).join('');
+  h+=`<div class="rev" onclick="renderDone(false)">📄 Review &amp; Copy</div>`;
+  jl.innerHTML=h;
+}
+function toggleJump(){const jl=document.getElementById('jl');jl.style.display=jl.style.display==='block'?'none':'block';}
+
+function toggleWord(key,w){
+  STATE.ans[key]=STATE.ans[key]||[];
+  const i=STATE.ans[key].indexOf(w);
+  if(i>-1)STATE.ans[key].splice(i,1); else STATE.ans[key].push(w);
+  STATE.edited=false; save(); renderQuestion();
+}
+function saveTxt(key){STATE.ans[key+'_txt']=document.getElementById('txt_'+key).value;STATE.edited=false;save();}
+function skipQ(){T.pages[STATE.qi].fields.forEach(f=>{delete STATE.ans[f.key];STATE.ans[f.key+'_txt']='';});save();nextQ();}
+function nextQ(){ if(STATE.qi<T.pages.length-1) goQ(STATE.qi+1); else renderDone(true); }
+
+function renderDone(rebuild){
+  T=TEMPLATES.find(t=>t.id===STATE.tid);
+  STATE.screen='done';
+  if(rebuild || !STATE.finalText || !STATE.edited){
+    STATE.finalText=buildMemory();
+    const s=addSentence();
+    STATE.finalText+=s;
+    STATE.lastAppended=s;
+    STATE.edited=false;
+  }
+  save();
+  let h=`<div class="screen">
+    <div class="narr">Look what you just captured. Take a breath, that was brave. Read it over and fix anything, then copy it into your journal.</div>
+    <div class="warn">✏️ A quick heads-up: once you start editing the text below by hand, going back to change your earlier answers will no longer rewrite it. From this point on, just make any changes right here in the box.</div>
+    <div class="qlabel">Your Memory — review &amp; edit before you copy</div>
+    <textarea class="finaledit" id="finalEdit" spellcheck="true" autocorrect="on" autocapitalize="sentences" oninput="saveFinal()">${esc(STATE.finalText)}</textarea>
+    <div class="qlabel" style="font-size:16px;margin-top:16px">I also want to add… <span style="font-weight:500;color:#7a6a5f">(anything else you remember)</span></div>
+    <div class="typewrap">
+      <textarea class="addbox" id="addBox" spellcheck="true" autocorrect="on" autocapitalize="sentences" placeholder="Type or speak anything else that's coming back to you" oninput="saveAdd()">${esc(STATE.addText)}</textarea>
+      <button class="mic" onclick="micAdd()" title="Speak">🎤</button>
+    </div>
+    <div class="fnote">Whatever you write here is added to the end of your memory above. Review and edit it all up there, then copy it and paste it into your journal under "What happened."</div>
+    <div class="navbtns">
+      <button class="b sec" onclick="goQ(${T.pages.length-1})">← Edit answers</button>
+      <button class="b prim" onclick="copyFinal()">Copy it</button>
+    </div>
+    <div style="text-align:center;margin-top:14px">
+      <button class="b" style="display:inline-block;flex:none;padding:13px 26px;background:linear-gradient(135deg,#8a3a63,#6a2a70);color:#fff;box-shadow:0 3px 8px rgba(120,40,90,.3)" onclick="polishSpelling()">✨ Polish my spelling</button>
+    </div>
+    <div class="fnote" style="margin-top:8px;text-align:center">Tap this to open a free helper. Just paste, and it fixes the spelling and grammar in your own words. Copy the clean version and paste it back in the box above.</div>
+    <button class="skip b" style="margin-top:10px" onclick="startAnother()">Start another memory</button>`;
+  if(STATE.caught.length){
+    h+=`<div class="qlabel" style="margin-top:24px">💡 Memories you caught along the way</div>`;
+    STATE.caught.forEach(c=>h+=`<div class="caught">${esc(c)}</div>`);
+  }
+  h+=`</div>`; app.innerHTML=h; afterRender();
+}
+function saveFinal(){STATE.finalText=document.getElementById('finalEdit').value;STATE.edited=true;save();}
+function saveAdd(){
+  STATE.addText=document.getElementById('addBox').value;
+  let base=STATE.finalText||'';
+  if(STATE.lastAppended && base.endsWith(STATE.lastAppended)){
+    base=base.slice(0, base.length-STATE.lastAppended.length);
+  }
+  const s=addSentence();
+  STATE.finalText=base+s;
+  STATE.lastAppended=s;
+  const box=document.getElementById('finalEdit');
+  if(box) box.value=STATE.finalText;
+  save();
+}
+function copyFinal(){
+  const box=document.getElementById('finalEdit');
+  const text=box?box.value:STATE.finalText;
+  navigator.clipboard.writeText(text).then(()=>toast("Copied! Paste it into your journal 💛")).catch(()=>{
+    const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();toast("Copied! 💛");});
+}
+function polishSpelling(){
+  const box=document.getElementById('finalEdit');
+  const text=box?box.value:(STATE.finalText||'');
+  const prompt="Please fix the spelling and grammar in the text below, and gently smooth any awkward or broken sentences so it reads naturally. Keep it in my own words and my own voice, do not change the meaning, and do not add new information. Then give it back to me:\n\n"+text;
+  function go(){toast("Copied! Opening the helper, just paste it in ✨");setTimeout(function(){window.open('https://chatgpt.com/','_blank');},900);}
+  navigator.clipboard.writeText(prompt).then(go).catch(function(){
+    var t=document.createElement('textarea');t.value=prompt;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();go();
+  });
+}
+function startAnother(){STATE.tid=null;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.lastAppended='';STATE.edited=false;STATE.screen='pick';save();renderPick();}
+
+// ---------------- CATCH A MEMORY ----------------
+function refreshBadge(){
+  const b=document.getElementById('catchBadge');
+  if(STATE.caught.length){b.style.display='inline-block';b.textContent=STATE.caught.length;} else b.style.display='none';
+}
+function openCatch(){document.getElementById('modal').style.display='flex';drawCaught();}
+function closeCatch(){document.getElementById('modal').style.display='none';document.getElementById('catchInput').value='';}
+function saveCatch(){const v=document.getElementById('catchInput').value.trim();if(v){STATE.caught.push(v);save();document.getElementById('catchInput').value='';drawCaught();refreshBadge();toast("Saved, you won't lose it 💛");}}
+function drawCaught(){
+  const l=document.getElementById('caughtList');
+  l.innerHTML=STATE.caught.length? STATE.caught.map((c,i)=>`<div class="caught">${esc(c)} <span style="float:right;color:#b04a2a;cursor:pointer;font-weight:900" onclick="delCaught(${i})">✕</span></div>`).join('') : `<p style="font-size:14px;color:#8a7d72;margin-top:12px">Nothing yet. Anything you jot here is saved.</p>`;
+  document.getElementById('clearAll').style.display=STATE.caught.length?'block':'none';
+}
+function delCaught(i){STATE.caught.splice(i,1);save();drawCaught();refreshBadge();}
+function clearAllCaught(){if(confirm("Clear the whole list? This can't be undone.")){STATE.caught=[];save();drawCaught();refreshBadge();}}
+
+// ---------------- MIC ----------------
+function micInto(elId, after){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast("Tip: tap the 🎤 on your keyboard to speak instead");return;}
+  const r=new SR();r.lang='en-CA';r.onresult=e=>{
+    const box=document.getElementById(elId);
+    box.value=(box.value?box.value+' ':'')+e.results[0][0].transcript;
+    if(after)after();};
+  r.onerror=()=>toast("Couldn't hear you. Try the 🎤 on your keyboard");
+  try{r.start();toast("Listening, speak now 🎤");}catch(e){toast("Use the 🎤 on your keyboard instead");}
+}
+function mic(key){micInto('txt_'+key, ()=>{saveTxt(key);renderQuestion();});}
+function micAdd(){micInto('addBox', ()=>{saveAdd();});}
+
+// ---------------- KEEP CATCH BUTTON VISIBLE WHEN ZOOMED ----------------
+function positionCatch(){
+  const btn=document.getElementById('catchBtn');
+  if(!window.visualViewport||!btn) return;
+  const vv=window.visualViewport;
+  btn.style.left=(vv.offsetLeft+vv.width-btn.offsetWidth-14)+'px';
+  btn.style.top=(vv.offsetTop+vv.height-btn.offsetHeight-14)+'px';
+  btn.style.right='auto'; btn.style.bottom='auto';
+}
+if(window.visualViewport){
+  visualViewport.addEventListener('resize',positionCatch);
+  visualViewport.addEventListener('scroll',positionCatch);
+}
+function afterRender(){refreshBadge();positionCatch();}
+
+// ---------------- TOAST + INIT ----------------
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+function init(){
+  if(STATE.tid && STATE.screen==='q'){T=TEMPLATES.find(t=>t.id===STATE.tid); if(T){renderQuestion();return;}}
+  if(STATE.tid && STATE.screen==='done'){T=TEMPLATES.find(t=>t.id===STATE.tid); if(T){renderDone(false);return;}}
+  renderPick();
+}
+init();
+</script>
+</body>
+</html>
