@@ -131,14 +131,14 @@ const TEMPLATES = [
   ],
   build:function(){
     const when=dateOpener();
-    const action=val('action')||"[what I had to do]";
-    const reason=val('reason')||"[the reason]";
-    const amount=val('amount'), wentto=val('wentto'), gaveup=val('gaveup'), thought=val('thought');
+    const action=clip(val('action'))||"[what I had to do]";
+    const reason=clip(val('reason'))||"[the reason]";
+    const amount=clip(val('amount')), wentto=clip(val('wentto')), gaveup=clip(val('gaveup')), thought=clip(val('thought'));
     let s=when+"I had to "+action+" because "+reason+". ";
     if(amount) s+="It came to about "+amount+". ";
     if(wentto) s+="That money went toward "+wentto+". ";
     if(gaveup) s+="To get through it, I gave up "+gaveup+". ";
-    if(thought) s+="I remember thinking, \""+thought+"\".";
+    if(thought) s+="I remember thinking, \""+thought+".\"";
     return s.trim();
   }
  },
@@ -183,10 +183,10 @@ const TEMPLATES = [
       ]}]}
   ],
   build:function(){
-    const who=val('who'), words=val('words'), real=val('real'), forced=val('forced'), whyquiet=val('whyquiet');
+    const who=clip(val('who')), words=clip(val('words')), real=clip(val('real')), forced=clip(val('forced')), whyquiet=clip(val('whyquiet'));
     let s=dateOpener();
-    s+=(who||"[the person]")+" "+deliveryPhrase()+": \""+(words||"[their words, as close as I remember]")+"\". ";
-    s+= real ? ("Looking back, "+real+". ") : "Looking back, [what was really going on]. ";
+    s+=(who||"[the person]")+" "+deliveryPhrase()+": \""+(words||"[their words, as close as I remember]")+".\" ";
+    s+= real ? ("Looking back, "+lc(real)+". ") : "Looking back, [what was really going on]. ";
     s+= "At the time, I "+(forced||"[what I felt forced to do]")+". ";
     s+= "I didn't push back because "+(whyquiet||"[why I stayed quiet]")+".";
     return s;
@@ -221,12 +221,12 @@ const TEMPLATES = [
   ],
   build:function(){
     const when=dateOpener();
-    const decision=val('decision')||"[what it was about]";
-    const role=val('role')||"[what happened to my role]";
-    const who=val('who'), facts=val('facts'), wanted=val('wanted');
+    const decision=lc(clip(val('decision')))||"[what it was about]";
+    const role=lc(clip(val('role')))||"[what happened to my role]";
+    const who=clip(val('who')), facts=clip(val('facts')), wanted=clip(val('wanted'));
     let s=when+"a decision was made about the boys' "+decision+", and I "+role+". ";
     if(who) s+="It was handled by "+who+". ";
-    if(facts) s+="Here is what actually happened: "+facts+". ";
+    if(facts) s+="What actually happened was that "+lc(facts)+". ";
     if(wanted) s+="As their mom, I would have wanted "+wanted+".";
     return s.trim();
   }
@@ -260,13 +260,13 @@ const TEMPLATES = [
   ],
   build:function(){
     const when=dateOpener();
-    const who=val('who')||"[who]";
-    const how=val('how'), what=val('what'), felt=val('felt'), why=val('why');
+    const who=clip(val('who'))||"[who]";
+    const how=clip(val('how')), what=clip(val('what')), felt=clip(val('felt')), why=clip(val('why'));
     let s=when+"I felt controlled by "+who+". ";
-    if(how) s+="It showed up as "+how+". ";
-    if(what) s+="Here is what happened: "+what+". ";
+    if(how) s+="It showed up as "+lc(how)+". ";
+    if(what) s+="What happened was that "+lc(what)+". ";
     s+= "In the end, I "+(felt||"[what I did]");
-    s+= why ? (", because "+why+".") : ".";
+    s+= why ? (", because "+lc(why)+".") : ".";
     return s.trim();
   }
  },
@@ -295,12 +295,12 @@ const TEMPLATES = [
   ],
   build:function(){
     const when=dateOpener();
-    const who=val('who')||"[which boy]";
-    const how=val('how')||"[how they stayed close]";
-    const what=val('what'), showed=val('showed');
+    const who=clip(val('who'))||"[which boy]";
+    const how=clip(val('how'))||"[how they stayed close]";
+    const what=clip(val('what')), showed=clip(val('showed'));
     let s=when+who+" "+how+". ";
     if(what) s+=what+". ";
-    if(showed) s+="It showed me that "+showed+".";
+    if(showed) s+="It showed me that "+lc(showed)+".";
     return s.trim();
   }
  }
@@ -317,6 +317,10 @@ const app=document.getElementById('app');
 
 // ---------------- HELPERS ----------------
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+// remove trailing period/comma/colon/space so the app never doubles up punctuation
+function clip(s){return (s||'').replace(/[.,;:\s]+$/,'');}
+// lowercase the first letter when a piece continues a sentence, but leave a standalone "I" alone
+function lc(s){s=(s||'').trim();if(!s)return s;if(/^I\b/.test(s))return s;return s.charAt(0).toLowerCase()+s.slice(1);}
 function joinAnd(arr){
   if(!arr.length) return "";
   if(arr.length===1) return arr[0];
