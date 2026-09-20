@@ -16,10 +16,14 @@
              cursor:pointer;box-shadow:0 3px 10px rgba(150,80,60,.12);}
   .blurbcard h3{margin:0 0 6px;font-size:19px;font-weight:900;color:#8a3a63;}
   .blurbcard p{margin:0;font-size:14.5px;color:#5f544c;line-height:1.5;}
-  .narr{background:#fff0e4;border-left:6px solid #ef7d52;border-radius:11px;padding:14px 16px;margin:14px 0;
+  .tbar{display:flex;align-items:center;gap:11px;background:#fff;border:2px solid #ecc9b6;border-radius:12px;
+        padding:10px 12px;margin:14px 0 6px;box-shadow:0 2px 6px rgba(150,80,60,.1);}
+  .tbar .tnum{flex:none;background:linear-gradient(135deg,#ef7d52,#c9633f);color:#fff;font-weight:900;font-size:16px;
+              width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .tbar .ttl{font-size:16px;font-weight:900;color:#8a3a63;line-height:1.2;}
+  .tbar .tpurpose{font-size:12.5px;color:#7a6a5f;line-height:1.3;margin-top:2px;}
+  .narr{background:#fff0e4;border-left:6px solid #ef7d52;border-radius:11px;padding:14px 16px;margin:10px 0 14px;
         font-size:16px;line-height:1.6;color:#5a463c;font-weight:500;}
-  .warn{background:#fbe9d4;border:2px solid #e0a04f;border-radius:11px;padding:12px 15px;margin:14px 0;
-        font-size:14.5px;line-height:1.55;color:#8a5320;font-weight:600;}
   .qlabel{font-size:20px;font-weight:900;color:#8a3a63;margin:14px 0 5px;}
   .fnote{font-size:13.5px;color:#7a6a5f;margin:0 0 8px;line-height:1.5;font-weight:500;}
   .groupname{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:#b05a3a;font-weight:800;margin:14px 0 6px;}
@@ -34,6 +38,7 @@
   button.b{flex:1;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;}
   .prim{background:linear-gradient(135deg,#ef7d52,#c9633f);color:#fff;box-shadow:0 3px 8px rgba(201,99,63,.3);}
   .sec{background:#f6ddca;color:#8a5320;} .skip{background:#e3edde;color:#48674a;}
+  .polish{background:linear-gradient(135deg,#8a3a63,#6a2a70);color:#fff;box-shadow:0 3px 8px rgba(120,40,90,.3);}
   .jumpbtn{display:block;width:100%;margin:12px 0 0;padding:11px;border:2px dashed #ef7d52;border-radius:11px;
            background:#fff;color:#8a3a63;font-size:14px;font-weight:800;cursor:pointer;}
   .jumplist{background:#fff;border:2px solid #ecc9b6;border-radius:12px;padding:8px;margin-top:6px;display:none;}
@@ -55,10 +60,11 @@
   .toast.show{opacity:1;}
   @media(min-width:700px){
     .hdr h1{font-size:34px;} .hdr .sub{font-size:18px;}
-    .lead{font-size:19px;} .narr{font-size:21px;} .warn{font-size:18px;} .qlabel{font-size:27px;} .fnote{font-size:16px;}
+    .lead{font-size:19px;} .narr{font-size:21px;} .qlabel{font-size:27px;} .fnote{font-size:16px;}
     .chip{font-size:19px;padding:12px 21px;} input[type=text],input[type=date],textarea{font-size:20px;} .mic{font-size:24px;}
     button.b{font-size:20px;padding:16px;} .blurbcard h3{font-size:24px;} .blurbcard p{font-size:17px;}
     .groupname{font-size:15px;} .jumplist div{font-size:18px;} .catchBtn{font-size:17px;padding:15px 21px;}
+    .tbar .tnum{width:38px;height:38px;font-size:20px;} .tbar .ttl{font-size:21px;} .tbar .tpurpose{font-size:16px;}
   }
 </style>
 </head>
@@ -71,7 +77,7 @@
 <div class="modal" id="modal">
   <div class="modalbox">
     <div class="qlabel">💡 Memories to come back to</div>
-    <p style="font-size:14px;color:#6b5f56;line-height:1.5;">A memory popped up? Jot a few words so you don't lose it. These stay saved here and show at the end of your memory. They stay even after you start another memory, until you delete them.</p>
+    <p style="font-size:14px;color:#6b5f56;line-height:1.5;">A memory popped up? Jot a few words so you don't lose it. These stay saved here, even after you start another memory, until you delete them.</p>
     <input type="text" id="catchInput" placeholder="e.g. the day the lawyer's letter came">
     <div class="navbtns">
       <button class="b sec" onclick="closeCatch()">Close</button>
@@ -93,9 +99,9 @@ const WHEN_PAGE = {navLabel:"When was this?",
 
 // ---------------- DATA: 5 TEMPLATES ----------------
 const TEMPLATES = [
- // ---------- #6 MONEY & SACRIFICE ----------
  {
   id:6, title:"Money & Sacrifice",
+  purpose:"For times you sold, borrowed, or went without to keep up.",
   blurb:"For a time you sold, borrowed, or went without to keep up, and what it cost you.",
   pages:[
    WHEN_PAGE,
@@ -137,9 +143,9 @@ const TEMPLATES = [
   }
  },
 
- // ---------- #7 A MOMENT THAT FELT LIKE PRESSURE ----------
  {
   id:7, title:"A Moment That Felt Like Pressure",
+  purpose:"For a demand or threat you felt forced to go along with.",
   blurb:"For a demand, threat, or moment you felt forced to go along with something, even when it wasn't fair.",
   pages:[
    WHEN_PAGE,
@@ -187,9 +193,9 @@ const TEMPLATES = [
   }
  },
 
- // ---------- #8 BEING PUSHED ASIDE AS THEIR MOM ----------
  {
   id:8, title:"Being Pushed Aside as Their Mom",
+  purpose:"For a decision about the boys where you had no say.",
   blurb:"For a decision about the boys where your voice was left out or overruled.",
   pages:[
    WHEN_PAGE,
@@ -226,9 +232,9 @@ const TEMPLATES = [
   }
  },
 
- // ---------- #13 WHEN I FELT CONTROLLED OR INTIMIDATED ----------
  {
   id:13, title:"When I Felt Controlled or Intimidated",
+  purpose:"For the subtle pressure and control that wore you down.",
   blurb:"For the subtle pressure and control, times you were made to feel you had no choice.",
   pages:[
    WHEN_PAGE,
@@ -265,9 +271,9 @@ const TEMPLATES = [
   }
  },
 
- // ---------- #15 MOMENTS THE BOYS SHOWED THEIR LOVE ----------
  {
   id:15, title:"Moments the Boys Showed Their Love",
+  purpose:"For the ways the boys stayed close to you.",
   blurb:"For the ways Nick or Josh stayed close, small signs of a bond no one could break.",
   pages:[
    WHEN_PAGE,
@@ -319,8 +325,12 @@ function joinAnd(arr){
 }
 function val(key){
   const words=(STATE.ans[key]||[]).slice();
-  const txt=(STATE.ans[key+'_txt']||'').trim();
-  if(txt) words.push(txt);
+  let txt=(STATE.ans[key+'_txt']||'').trim();
+  if(txt){
+    // if chips are also chosen, this typed text follows "and", so force a lowercase start
+    if(words.length) txt = txt.charAt(0).toLowerCase()+txt.slice(1);
+    words.push(txt);
+  }
   return joinAnd(words);
 }
 function dateOpener(){
@@ -362,6 +372,11 @@ function addSentence(){
   if(!/[.!?]$/.test(x)) x+='.';
   return "\n\nI also want to add that "+x;
 }
+function titleBar(){
+  const t=TEMPLATES.find(x=>x.id===STATE.tid);
+  if(!t) return '';
+  return `<div class="tbar"><span class="tnum">${t.id}</span><div><div class="ttl">${t.title}</div><div class="tpurpose">${t.purpose}</div></div></div>`;
+}
 
 // ---------------- SCREENS ----------------
 function renderPick(){
@@ -380,7 +395,7 @@ function goQ(i){STATE.qi=i;STATE.screen='q';save();renderQuestion();}
 function renderQuestion(){
   T=TEMPLATES.find(t=>t.id===STATE.tid);
   const page=T.pages[STATE.qi];
-  let h=`<div class="screen"><div class="narr">${page.narr}</div>`;
+  let h=`<div class="screen">${titleBar()}<div class="narr">${page.narr}</div>`;
   page.fields.forEach(f=>{
     h+=`<div><div class="qlabel">${f.label}</div>${f.note?`<div class="fnote">${f.note}</div>`:''}`;
     (f.groups||[]).forEach(g=>{
@@ -417,7 +432,7 @@ function pageDone(page){return page.fields.some(f=>(STATE.ans[f.key]&&STATE.ans[
 function buildJump(){
   const jl=document.getElementById('jl');
   let h=T.pages.map((p,i)=>`<div class="${pageDone(p)?'done':''}" onclick="goQ(${i})">${p.navLabel}</div>`).join('');
-  h+=`<div class="rev" onclick="renderDone(false)">📄 Review &amp; Copy</div>`;
+  h+=`<div class="rev" onclick="renderDone(false)">📄 Review &amp; Finish</div>`;
   jl.innerHTML=h;
 }
 function toggleJump(){const jl=document.getElementById('jl');jl.style.display=jl.style.display==='block'?'none':'block';}
@@ -444,30 +459,24 @@ function renderDone(rebuild){
   }
   save();
   let h=`<div class="screen">
-    <div class="narr">Look what you just captured. Take a breath, that was brave. Read it over and fix anything, then copy it into your journal.</div>
-    <div class="warn">✏️ A quick heads-up: once you start editing the text below by hand, going back to change your earlier answers will no longer rewrite it. From this point on, just make any changes right here in the box.</div>
-    <div class="qlabel">Your Memory — review &amp; edit before you copy</div>
+    ${titleBar()}
+    <div class="narr">Look what you captured, that took real courage. 🌿 Read it over below, then tap Polish to finish.</div>
+    <div class="qlabel">Your Memory</div>
     <textarea class="finaledit" id="finalEdit" spellcheck="true" autocorrect="on" autocapitalize="sentences" oninput="saveFinal()">${esc(STATE.finalText)}</textarea>
-    <div class="qlabel" style="font-size:16px;margin-top:16px">I also want to add… <span style="font-weight:500;color:#7a6a5f">(anything else you remember)</span></div>
+    <div class="qlabel" style="font-size:16px;margin-top:16px">I also want to add that…</div>
     <div class="typewrap">
       <textarea class="addbox" id="addBox" spellcheck="true" autocorrect="on" autocapitalize="sentences" placeholder="Type or speak anything else that's coming back to you" oninput="saveAdd()">${esc(STATE.addText)}</textarea>
       <button class="mic" onclick="micAdd()" title="Speak">🎤</button>
     </div>
-    <div class="fnote">Whatever you write here is added to the end of your memory above. Review and edit it all up there, then copy it and paste it into your journal under "What happened."</div>
+    <div class="fnote">This gets added to the end of your memory above.</div>
     <div class="navbtns">
       <button class="b sec" onclick="goQ(${T.pages.length-1})">← Edit answers</button>
-      <button class="b prim" onclick="copyFinal()">Copy it</button>
+      <button class="b polish" onclick="polishSpelling()">✨ Polish my spelling</button>
     </div>
-    <div style="text-align:center;margin-top:14px">
-      <button class="b" style="display:inline-block;flex:none;padding:13px 26px;background:linear-gradient(135deg,#8a3a63,#6a2a70);color:#fff;box-shadow:0 3px 8px rgba(120,40,90,.3)" onclick="polishSpelling()">✨ Polish my spelling</button>
-    </div>
-    <div class="fnote" style="margin-top:8px;text-align:center">Tap this to open a free helper. Just paste, and it fixes the spelling and grammar in your own words. Copy the clean version and paste it back in the box above.</div>
-    <button class="skip b" style="margin-top:10px" onclick="startAnother()">Start another memory</button>`;
-  if(STATE.caught.length){
-    h+=`<div class="qlabel" style="margin-top:24px">💡 Memories you caught along the way</div>`;
-    STATE.caught.forEach(c=>h+=`<div class="caught">${esc(c)}</div>`);
-  }
-  h+=`</div>`; app.innerHTML=h; afterRender();
+    <div class="fnote" style="margin-top:8px;text-align:center">Opens a free helper. Paste it in, it fixes the spelling and grammar in your own words, then copy the clean version into your journal under “What happened.”</div>
+    <button class="skip b" style="margin-top:16px" onclick="startAnother()">Start another memory</button>
+  </div>`;
+  app.innerHTML=h; afterRender();
 }
 function saveFinal(){STATE.finalText=document.getElementById('finalEdit').value;STATE.edited=true;save();}
 function saveAdd(){
@@ -482,12 +491,6 @@ function saveAdd(){
   const box=document.getElementById('finalEdit');
   if(box) box.value=STATE.finalText;
   save();
-}
-function copyFinal(){
-  const box=document.getElementById('finalEdit');
-  const text=box?box.value:STATE.finalText;
-  navigator.clipboard.writeText(text).then(()=>toast("Copied! Paste it into your journal 💛")).catch(()=>{
-    const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();toast("Copied! 💛");});
 }
 function polishSpelling(){
   const box=document.getElementById('finalEdit');
