@@ -305,48 +305,58 @@ const TEMPLATES = [
   }
  },{
   id:16, title:"The Boys' Lifestyle & Well-being",
-  purpose:"For showing how secure and fully supported the boys' lives are.",
-  blurb:"For the boys' standard of living, sports, trips, home, and school, showing they are secure, active, and fully supported in their dad's high-income household.",
+  purpose:"For their sports, family trips, home, vehicles, and school.",
+  blurb:"For the boys' standard of living, their sports, family trips, home and vehicles, and school, showing they are secure, active, and fully supported in their dad's high-income household.",
   pages:[
-   {navLabel:"Their sports & teams",
-    narr:"What does the boys' sports life look like? Tap any that fit, or add your own.",
-    fields:[{key:"sports",label:"Their sports and teams",ph:"Type or speak anything to add",
-      groups:[{name:"They…",words:["play in a traveling sports league","are on an elite competitive team","travel out of town for games all the time","have played sports for years","keep a busy, active sports schedule","could be scouted within a year or two","have high registration, equipment and coaching costs"]}]}]},
+   {navLabel:"Josh & his sports",
+    narr:"Josh is very active in sports. What does that look like? Tap any that fit, or add your own.",
+    fields:[
+      {key:"joshsport",label:"Josh and his sports",ph:"Type or speak anything to add",
+       groups:[{name:"Josh (17)",words:["plays at an elite, competitive level","is on a traveling sports team","travels all over Ontario for games","now travels into the States for games too","could go professional one day","keeps a busy, high-level sports schedule","has played sports for years"]}]},
+      {key:"grewup",label:"When they were younger",ph:"Type or speak anything to add",
+       groups:[{name:"Both boys…",words:["played several sports when they were younger"]}]}
+    ]},
+   {navLabel:"Nick & school",
+    narr:"What does Nick's schooling and future look like? Tap any that fit.",
+    fields:[{key:"nickschool",label:"Nick and school",ph:"Type or speak anything to add",
+      groups:[{name:"Nick (20)",words:["is in school now","is on about a four-year school path","will be able to live at home for all of it, maybe longer","is focused on his education"]}]}]},
    {navLabel:"Trips & vacations",
-    narr:"What about family trips and vacations? Tap any that fit.",
+    narr:"What do their family trips and vacations look like? Tap any that fit.",
     fields:[{key:"trips",label:"Trips and vacations",ph:"Type or speak anything to add",
-      groups:[{name:"They…",words:["take regular family trips","go on yearly out-of-province vacations","travel to resorts as a family","get away at least once a year, often more","never have their travel affected by support"]}]}]},
+      groups:[{name:"As a family, they…",words:["take regular family trips","go on yearly out-of-province vacations","travel to resorts as a family","get away at least once a year, often more","never have their travel affected by support"]}]}]},
    {navLabel:"Home & household",
     narr:"What is their home and household like? Tap any that fit.",
     fields:[{key:"home",label:"Their home and household",ph:"Type or speak anything to add",
-      groups:[{name:"They…",words:["live in the large family home","have several newer family vehicles","got a brand new SUV for game travel","live in a stable, well-off household","are backed by a high double-income household","have a big financial cushion from Sandra's income"]}]}]},
-   {navLabel:"School & their future",
-    narr:"What does their schooling and future look like? Tap any that fit.",
-    fields:[{key:"school",label:"School and their future",ph:"Type or speak anything to add",
-      groups:[{name:"When it comes to school…",words:["their oldest is in college full-time","he is expected to live at home for another four years","his education is fully covered by his dad","he has his own summer and part-time job","they want for nothing when it comes to school"]}]}]},
+      groups:[{name:"They…",words:["live in a large family home","have moved into a bigger home since 2019","have moved to bigger homes a few times since 2019","have nice, newer vehicles","have more than one newer vehicle","live in a stable, comfortable, well-off household","are backed by a two-income household"]}]}]},
    {navLabel:"What it all shows",
     narr:"What does all of this show? Tap any that fit.",
     fields:[{key:"point",label:"What it all shows",ph:"Type or speak anything to add",
       groups:[{name:"It shows that…",words:["the boys live a very good life","their well-being is not compromised in any way","there is zero negative financial impact on them","they are fully supported in a high-income household","their lifestyle is unaffected by support payments"]}]}]},
+   {navLabel:"Proof I can gather",
+    narr:"This is where proof makes it powerful. Tap what you can gather. 💡 Tip: screenshot their Facebook and social media posts, and if you're comfortable, take a quick photo of their home and vehicles, then upload it all to your journal.",
+    fields:[{key:"proof",label:"Proof I can gather or attach",ph:"Type or speak anything to add",
+      groups:[{name:"I can back this up with…",words:["photos from their Facebook and social media","screenshots of their vacations and trips posted online","posts showing Josh's teams and travel games","a photo of their home","photos of their vehicles","any receipts or records I have"]}]}]},
    {navLabel:"Your own words",
     narr:"Anything you want to add in your own words? This part is optional.",
     fields:[{key:"own",label:"Anything to add in your own words?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
   ],
   build:function(){
-    const sports=clip(val('sports')), trips=clip(val('trips')), home=clip(val('home')),
-          school=clip(val('school')), point=clip(val('point')), own=clip(val('own'));
+    const jsport=clip(val('joshsport')), grew=clip(val('grewup')), nschool=clip(val('nickschool')),
+          trips=clip(val('trips')), home=clip(val('home')), point=clip(val('point')),
+          proof=clip(val('proof')), own=clip(val('own'));
     let s="";
-    if(sports) s+="The boys "+sports+". ";
-    if(trips)  s+="They also "+trips+". ";
-    if(home)   s+="At home, they "+home+". ";
-    if(school) s+="When it comes to school, "+lc(school)+". ";
+    if(jsport) s+="Josh "+lc(jsport)+". ";
+    if(grew)   s+="Both boys "+lc(grew)+". ";
+    if(nschool) s+="Nick "+lc(nschool)+". ";
+    if(trips)  s+="As a family, they "+lc(trips)+". ";
+    if(home)   s+="At home, they "+lc(home)+". ";
     if(point)  s+="All of this shows that "+lc(point)+". ";
+    if(proof)  s+="I can back this up with "+lc(proof)+". ";
     if(own)    s+=own+". ";
     if(!s) s="[Tap the choices above to describe the boys' lifestyle.]";
     return s.trim();
   }
  }
-
 ];
 
 // ---------------- STATE + AUTOSAVE ----------------
