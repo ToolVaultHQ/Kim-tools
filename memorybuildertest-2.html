@@ -303,7 +303,50 @@ const TEMPLATES = [
     if(showed) s+="It showed me that "+lc(showed)+".";
     return s.trim();
   }
+ },{
+  id:16, title:"The Boys' Lifestyle & Well-being",
+  purpose:"For showing how secure and fully supported the boys' lives are.",
+  blurb:"For the boys' standard of living, sports, trips, home, and school, showing they are secure, active, and fully supported in their dad's high-income household.",
+  pages:[
+   {navLabel:"Their sports & teams",
+    narr:"What does the boys' sports life look like? Tap any that fit, or add your own.",
+    fields:[{key:"sports",label:"Their sports and teams",ph:"Type or speak anything to add",
+      groups:[{name:"They…",words:["play in a traveling sports league","are on an elite competitive team","travel out of town for games all the time","have played sports for years","keep a busy, active sports schedule","could be scouted within a year or two","have high registration, equipment and coaching costs"]}]}]},
+   {navLabel:"Trips & vacations",
+    narr:"What about family trips and vacations? Tap any that fit.",
+    fields:[{key:"trips",label:"Trips and vacations",ph:"Type or speak anything to add",
+      groups:[{name:"They…",words:["take regular family trips","go on yearly out-of-province vacations","travel to resorts as a family","get away at least once a year, often more","never have their travel affected by support"]}]}]},
+   {navLabel:"Home & household",
+    narr:"What is their home and household like? Tap any that fit.",
+    fields:[{key:"home",label:"Their home and household",ph:"Type or speak anything to add",
+      groups:[{name:"They…",words:["live in the large family home","have several newer family vehicles","got a brand new SUV for game travel","live in a stable, well-off household","are backed by a high double-income household","have a big financial cushion from Sandra's income"]}]}]},
+   {navLabel:"School & their future",
+    narr:"What does their schooling and future look like? Tap any that fit.",
+    fields:[{key:"school",label:"School and their future",ph:"Type or speak anything to add",
+      groups:[{name:"When it comes to school…",words:["their oldest is in college full-time","he is expected to live at home for another four years","his education is fully covered by his dad","he has his own summer and part-time job","they want for nothing when it comes to school"]}]}]},
+   {navLabel:"What it all shows",
+    narr:"What does all of this show? Tap any that fit.",
+    fields:[{key:"point",label:"What it all shows",ph:"Type or speak anything to add",
+      groups:[{name:"It shows that…",words:["the boys live a very good life","their well-being is not compromised in any way","there is zero negative financial impact on them","they are fully supported in a high-income household","their lifestyle is unaffected by support payments"]}]}]},
+   {navLabel:"Your own words",
+    narr:"Anything you want to add in your own words? This part is optional.",
+    fields:[{key:"own",label:"Anything to add in your own words?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
+  ],
+  build:function(){
+    const sports=clip(val('sports')), trips=clip(val('trips')), home=clip(val('home')),
+          school=clip(val('school')), point=clip(val('point')), own=clip(val('own'));
+    let s="";
+    if(sports) s+="The boys "+sports+". ";
+    if(trips)  s+="They also "+trips+". ";
+    if(home)   s+="At home, they "+home+". ";
+    if(school) s+="When it comes to school, "+lc(school)+". ";
+    if(point)  s+="All of this shows that "+lc(point)+". ";
+    if(own)    s+=own+". ";
+    if(!s) s="[Tap the choices above to describe the boys' lifestyle.]";
+    return s.trim();
+  }
  }
+
 ];
 
 // ---------------- STATE + AUTOSAVE ----------------
