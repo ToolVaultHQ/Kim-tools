@@ -493,6 +493,95 @@ const TEMPLATES = [
     return s.trim();
   }
  },
+{
+  id:11,
+  title:"A Demand or a Bill",
+  purpose:"For receipts, 50/50 requests, Section 7 expenses, school costs, sports costs, medical costs, and times Kim was asked to pay when she could not afford it.",
+  blurb:"For memories about being asked to pay expenses, especially when the costs felt unfair, unaffordable, inflated, discretionary, or out of step with Kim's income.",
+  pages:[
+   {navLabel:"What this was about",
+    narr:"What kind of demand, bill, receipt, or expense was this?",
+    fields:[{key:"about",label:"This was about",ph:"Type or speak anything to add",
+      groups:[{name:"Expense types",words:["a receipt I was expected to pay","a 50 percent payment request","a sports expense","a school expense","a medical expense","a dental expense","a chiropractor expense","a benefits expense","a clothing expense","an equipment expense","a travel expense","a Section 7 expense","an expense before FRO started","an expense after FRO started","a support payment issue","an arrears issue"]}]}]},
+   {navLabel:"When this happened",
+    narr:"If you know when this happened, add it here. A rough date is okay.",
+    fields:[{key:"when",label:"When this happened",ph:"Type or speak the date, even roughly",
+      groups:[{name:"Rough timing",words:["before FRO started in 2019","around the time FRO started","after FRO started","after the boys moved to Joe full-time","after Sandra became involved","during a time I had no steady income","during a layoff","while I was in school","while I was in unpaid placement","after I had already used savings to survive"]}]}]},
+   {navLabel:"Who asked for it",
+    narr:"Who asked you to pay, sent the receipt, or pushed the expense?",
+    fields:[{key:"who",label:"Who asked for it?",ph:"Type or speak anyone else",
+      groups:[{name:"People or organizations",words:["Joe","Sandra","Joe and Sandra","FRO","a lawyer","one of the boys","the school","a sports organization","a medical office","a dental office"]}]}]},
+   {navLabel:"What was requested",
+    narr:"What were you being asked to pay or contribute?",
+    fields:[{key:"request",label:"What were you asked to pay?",ph:"Type or speak the amount, request, or details",
+      groups:[{name:"What was requested",words:["50 percent of the cost","half of the receipt","monthly support","arrears","extra expenses on top of support","sports fees","team fees","equipment costs","school costs","medical costs","dental costs","chiropractor costs","travel costs","a payment I could not afford","a payment I did not understand"]}]}]},
+   {navLabel:"My income situation",
+    narr:"What was your money situation when this demand or bill came up?",
+    fields:[{key:"income",label:"My income situation was",ph:"Type or speak anything to add",
+      groups:[{name:"Income situation",words:["I had no steady income","I was laid off","I was in school full-time","I was in unpaid placement","I was already behind financially","I was using savings to survive","I had already used pension money to survive","I was struggling to pay rent","I was struggling to pay basic bills","I could not afford the amount being asked"]}]}]},
+   {navLabel:"Why it felt unfair",
+    narr:"What made this demand or bill feel unfair, unreasonable, or too much?",
+    fields:[{key:"unfair",label:"Why it felt unfair",ph:"Type or speak anything to add",
+      groups:[{name:"What felt unfair",words:["I was not consulted before the cost was created","I was expected to pay after the decision was already made","the cost felt discretionary","the cost felt higher than necessary","the expenses kept increasing","I was being asked for 50 percent even when I had little income","Joe and Sandra had a much higher household income","their household appeared financially comfortable","I felt pressured to pay without being allowed to question it","I felt like saying no would be used against me"]}]}]},
+   {navLabel:"Their household situation",
+    narr:"What did you notice about Joe and Sandra's household or lifestyle around this time?",
+    fields:[{key:"household",label:"What I noticed about their household",ph:"Type or speak anything to add",
+      groups:[{name:"Household context",words:["they had two incomes","their household income appeared much higher than mine","they seemed financially comfortable","the boys were still able to play sports","the boys still had trips and activities","the boys had what they needed","sports and equipment costs kept being covered","their lifestyle did not appear to be at risk","the pressure was being put on me even though I had far less money"]}]}]},
+   {navLabel:"What I tried to do",
+    narr:"What did you try to do when this came up?",
+    fields:[{key:"tried",label:"What I tried to do",ph:"Type or speak anything to add",
+      groups:[{name:"I tried to",words:["keep up","pay what I could","ask questions","understand the amount","avoid conflict","keep the peace","explain that I could not afford it","find a way to manage it","protect my relationship with the boys","handle it without making things worse"]}]}]},
+   {navLabel:"Why this matters",
+    narr:"Why does this demand, bill, or receipt matter to your bigger story?",
+    fields:[{key:"matters",label:"Why this matters",ph:"Type or speak anything to add",
+      groups:[{name:"It matters because",words:["it shows the financial pressure I was under","it shows I was being asked to pay more than I could afford","it shows expenses were being treated like they were automatic","it shows I was not in the same financial position as Joe and Sandra","it helps explain why I fell behind","it helps explain why I felt scared to push back","it is part of the bigger pattern"]}]}]},
+   {navLabel:"Proof I have",
+    narr:"What proof do you have, or what proof might you be able to find?",
+    fields:[
+      {key:"proofLevel",label:"Choose one",ph:"Type or speak anything else",
+        groups:[{name:"Proof wording",words:["I have","I may have"]}]},
+      {key:"proof",label:"Proof",ph:"Type or speak anything to add",
+        groups:[{name:"Proof examples",words:["receipts","texts","emails","screenshots","bank records","FRO records","court papers","lawyer letters","expense lists","school records","sports records","medical receipts","dental receipts","benefits records","social media screenshots","photos","someone who remembers this"]}]}
+    ]},
+   {navLabel:"Your own words",
+    narr:"Anything else you want to add about this demand or bill?",
+    fields:[{key:"own",label:"Anything else?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
+  ],
+  build:function(){
+    const clean=function(x){
+      return (x||"").trim().replace(/[.!?]+$/,"");
+    };
+    const about=clean(val('about')),
+          when=clean(val('when')),
+          who=clean(val('who')),
+          request=clean(val('request')),
+          income=clean(val('income')),
+          unfair=clean(val('unfair')),
+          household=clean(val('household')),
+          tried=clean(val('tried')),
+          matters=clean(val('matters')),
+          proofLevel=clean(val('proofLevel')),
+          proof=clean(val('proof')),
+          own=clean(val('own'));
+    let s="";
+    if(about) s+="This was about "+about+". ";
+    if(when) s+="This happened "+when+". ";
+    if(who) s+="The request came from "+who+". ";
+    if(request) s+="I was being asked to pay "+request+". ";
+    if(income) s+="At the time, "+income+". ";
+    if(unfair) s+="It felt unfair because "+unfair+". ";
+    if(household) s+="What I noticed about Joe and Sandra's household was that "+household+". ";
+    if(tried) s+="I tried to "+tried+". ";
+    if(matters) s+="This matters because "+matters+". ";
+    if(proof){
+      const level=proofLevel || "I may have";
+      s+=level+" proof such as "+proof+". ";
+    }
+    if(own) s+=own+". ";
+    if(!s) s="[Use this page to describe the demand, bill, receipt, or expense in your own words.]";
+    return s.trim();
+  }
+},
 
  {
   id:13, title:"When I Felt Controlled or Intimidated",
