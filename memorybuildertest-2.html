@@ -112,6 +112,9 @@ const TEMPLATES = [
     narr:"What happened? You can keep it short, messy, or simple. Just get the basics down.",
     fields:[{key:"facts",label:"What happened?",ph:"Type or speak what happened",groups:[]}]},
    {navLabel:"Who was involved",
+ narr:"Who or what was involved in this memory? Tap any that fit.",
+ fields:[{key:"who",label:"Who or what was involved?",ph:"Type or speak anyone else",
+   groups:[{name:"People or organizations involved",words:["Joe","Sandra","one of the boys","both boys","FRO","a lawyer","my family","just me"]}]}]},
     narr:"Who was part of this memory? Tap any that fit.",
     fields:[{key:"who",label:"Who was involved?",ph:"Type or speak anyone else",
       groups:[{name:"People involved",words:["Joe was involved","Sandra was involved","one of the boys was involved","both boys were involved","FRO was involved","a lawyer was involved","my family was involved","I was dealing with it alone"]}]}]},
@@ -137,8 +140,8 @@ const TEMPLATES = [
           own=clip(val('own'));
     let s="";
     if(topic) s+="This memory is about "+lc(topic)+". ";
-    if(facts) s+="What happened was that "+lcFirst(facts)+". ";
-    if(who) s+="The people involved were: "+who+". ";
+    if(facts) s+="What happened was this: "+facts.trim().replace(/[.!?]+$/,'')+". ";
+    if(who) s+="This involved "+who+". ";
     if(felt) s+="At the time, I felt "+lc(felt)+". ";
     if(matters) s+="This matters because "+lc(matters)+". ";
     if(proof) s+="I may be able to back this up with "+lc(proof)+". ";
