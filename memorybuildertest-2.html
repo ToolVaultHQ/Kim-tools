@@ -493,6 +493,101 @@ const TEMPLATES = [
     return s.trim();
   }
  },
+  {
+  id:9,
+  title:"Losing Work & Starting Over",
+  purpose:"For a job that ended through no fault of yours, and how you tried to rebuild afterward.",
+  blurb:"For memories about being laid off, losing income, contracts ending, returning to school, retraining, doing unpaid placement, and trying to rebuild after work ended.",
+  pages:[
+   {navLabel:"What work ended",
+    narr:"What job, contract, or work situation ended?",
+    fields:[{key:"work",label:"The work that ended was",ph:"Type or speak anything to add",
+      groups:[{name:"Work situations",words:["a full-time job","a contract job","a position I depended on","work I had been counting on","a job that helped me pay support","a job that helped me keep up with bills","a job that ended suddenly","a job that ended after things had already become financially hard","a source of income I could not easily replace"]}]}]},
+   {navLabel:"When this happened",
+    narr:"If you know when this happened, add it here. A rough date is okay.",
+    fields:[{key:"when",label:"When this happened",ph:"Type or speak the date, even roughly",
+      groups:[{name:"Rough timing",words:["around 2019","around 2020","around 2021","around 2022","around 2023","around 2024","around 2025","after FRO started","after the boys moved to Joe full-time","after I had already fallen behind","during a time I was already under financial pressure","before I returned to school","while I was trying to rebuild"]}]}]},
+   {navLabel:"How it ended",
+    narr:"How did the job, contract, or work situation end?",
+    fields:[{key:"how",label:"How it ended",ph:"Type or speak anything to add",
+      groups:[{name:"How it ended",words:["I was laid off","my position was eliminated","the contract ended","there was not enough work","the employer ended the role","the job ended through no fault of my own","the work stopped being available","the income stopped unexpectedly","I was not given another position","I could not keep earning the same income"]}]}]},
+   {navLabel:"Why it was not my choice",
+    narr:"What shows this was not something you chose or created on purpose?",
+    fields:[{key:"notChoice",label:"This was not my choice because",ph:"Type or speak anything to add",
+      groups:[{name:"Not my choice",words:["I did not quit","I did not choose to stop working","I wanted to keep earning income","I needed the income to survive","I needed the income to pay support","I was trying to stay financially responsible","I could not control the job ending","I did not create the layoff","I did not have another job waiting","I was left having to figure out what to do next"]}]}]},
+   {navLabel:"What I did next",
+    narr:"What did you try to do after the work ended?",
+    fields:[{key:"next",label:"After that, I tried to",ph:"Type or speak anything to add",
+      groups:[{name:"I tried to",words:["find new work","apply for jobs","look for work I could manage","update my resume","go to interviews","find work from home","look for steady income","retrain for a better future","return to school","finish my program","complete my unpaid placement","use available supports","keep going even though I was exhausted"]}]}]},
+   {navLabel:"School or retraining",
+    narr:"If school, retraining, or placement was part of starting over, add it here.",
+    fields:[{key:"school",label:"School or retraining",ph:"Type or speak anything to add",
+      groups:[{name:"School and placement",words:["I returned to school to become employable again","I went to school full-time","I had a mandatory unpaid placement","my placement made paid work harder","my schedule made steady paid work difficult","I was trying to build a stable future","I was trying to change my situation instead of giving up","I was using school as a way to rebuild","I was not avoiding work, I was trying to become employable again"]}]}]},
+   {navLabel:"Money impact",
+    narr:"What happened financially after the work ended?",
+    fields:[{key:"money",label:"Financially",ph:"Type or speak anything to add",
+      groups:[{name:"Financial impact",words:["I had no steady income","I fell behind financially","I struggled to pay basic bills","I struggled to pay rent","I struggled to pay support","I used savings to survive","I used pension money to survive","I had to take on more debt","I had to make choices between bills","I could not keep up the way I had before","my financial situation changed in a major way"]}]}]},
+   {navLabel:"What I gave up",
+    narr:"What did you have to use, lose, or give up while trying to survive?",
+    fields:[{key:"gaveUp",label:"What I gave up or used to survive",ph:"Type or speak anything to add",
+      groups:[{name:"Sacrifices",words:["my savings","my pension money","my financial security","my house","equity from my house","credit I had left","my sense of stability","my ability to plan ahead","my peace of mind","things I had worked years to build","the future I thought I was going to have"]}]}]},
+   {navLabel:"How it affected me",
+    narr:"How did losing work and starting over affect you personally?",
+    fields:[{key:"felt",label:"This left me feeling",ph:"Type or speak anything to add",
+      groups:[{name:"Feelings",words:["scared","overwhelmed","embarrassed","ashamed","exhausted","panicked","stuck","discouraged","like I was failing","like I could not catch up","like I was trying but it was never enough","worried about the boys","worried about losing everything","determined to keep going"]}]}]},
+   {navLabel:"Why this matters",
+    narr:"Why does this job loss or restart matter to your bigger story?",
+    fields:[{key:"matters",label:"Why this matters",ph:"Type or speak anything to add",
+      groups:[{name:"It matters because",words:["it shows my income changed through no fault of my own","it shows I was not choosing to avoid support","it shows I was trying to rebuild","it shows why I could not pay the same amount anymore","it helps explain why I fell behind","it shows I was acting in good faith","it shows I was trying to become stable again","it is part of the bigger pattern of financial pressure"]}]}]},
+   {navLabel:"Proof I have",
+    narr:"What proof do you have, or what proof might you be able to find?",
+    fields:[
+      {key:"proofLevel",label:"Choose one",ph:"Type or speak anything else",
+        groups:[{name:"Proof wording",words:["I have","I may have"]}]},
+      {key:"proof",label:"Proof",ph:"Type or speak anything to add",
+        groups:[{name:"Proof examples",words:["ROE records","termination letter","layoff letter","contract documents","emails from the employer","texts about the job ending","EI records","CRA records","job applications","interview emails","resume updates","school records","placement records","program records","MNO records","bank records","credit card records","pension withdrawal records","mortgage records","house sale records"]}]}
+    ]},
+   {navLabel:"Your own words",
+    narr:"Anything else you want to add about losing work or starting over?",
+    fields:[{key:"own",label:"Anything else?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
+  ],
+  build:function(){
+    const clean=function(x){
+      return (x||"").trim().replace(/[.!?]+$/,"");
+    };
+    const work=clean(val('work')),
+          when=clean(val('when')),
+          how=clean(val('how')),
+          notChoice=clean(val('notChoice')),
+          next=clean(val('next')),
+          school=clean(val('school')),
+          money=clean(val('money')),
+          gaveUp=clean(val('gaveUp')),
+          felt=clean(val('felt')),
+          matters=clean(val('matters')),
+          proofLevel=clean(val('proofLevel')),
+          proof=clean(val('proof')),
+          own=clean(val('own'));
+    let s="";
+    if(work) s+="The work that ended was "+work+". ";
+    if(when) s+="This happened "+when+". ";
+    if(how) s+="The job or work situation ended because "+how+". ";
+    if(notChoice) s+="This was not my choice because "+notChoice+". ";
+    if(next) s+="After that, I tried to "+next+". ";
+    if(school) s+="School or retraining was part of this because "+school+". ";
+    if(money) s+="Financially, "+money+". ";
+    if(gaveUp) s+="To survive, I gave up or used "+gaveUp+". ";
+    if(felt) s+="This left me feeling "+felt+". ";
+    if(matters) s+="This matters because "+matters+". ";
+    if(proof){
+      const level=proofLevel || "I may have";
+      s+=level+" proof such as "+proof+". ";
+    }
+    if(own) s+=own+". ";
+    if(!s) s="[Use this page to describe the job, contract, layoff, income loss, school, retraining, or rebuilding period in your own words.]";
+    return s.trim();
+  }
+},
 {
   id:11,
   title:"A Demand or a Bill",
