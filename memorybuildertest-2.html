@@ -100,6 +100,268 @@ const WHEN_PAGE = {navLabel:"When was this?",
 // ---------------- DATA: 5 TEMPLATES ----------------
 const TEMPLATES = [
  {
+  id:1, title:"Just Tell It",
+  purpose:"For any memory Kim wants to get down without overthinking it.",
+  blurb:"For any memory that does not need a perfect category yet. This helps Kim simply tell what happened, who was involved, how it felt, and why it matters.",
+  pages:[
+   {navLabel:"What this is about",
+    narr:"What kind of memory is this? Tap anything that fits, or type your own.",
+    fields:[{key:"topic",label:"This memory is about",ph:"Type or speak anything to add",
+      groups:[{name:"This is about…",words:["a memory I want to get down before I forget it","something I have been carrying for a long time","a moment that still comes back to me","something that affected me more than people realized","something I need to explain in my own words","a piece of the bigger story"]}]}]},
+   {navLabel:"What happened",
+    narr:"What happened? You can keep it short, messy, or simple. Just get the basics down.",
+    fields:[{key:"facts",label:"What happened?",ph:"Type or speak what happened",groups:[]}]},
+   {navLabel:"Who was involved",
+    narr:"Who was part of this memory? Tap any that fit.",
+    fields:[{key:"who",label:"Who was involved?",ph:"Type or speak anyone else",
+      groups:[{name:"People involved",words:["Joe was involved","Sandra was involved","one of the boys was involved","both boys were involved","FRO was involved","a lawyer was involved","my family was involved","I was dealing with it alone"]}]}]},
+   {navLabel:"How it felt",
+    narr:"How did it feel at the time? Tap what fits.",
+    fields:[{key:"felt",label:"How it felt",ph:"Type or speak anything to add",
+      groups:[{name:"I felt…",words:["overwhelmed","hurt","confused","pressured","scared","angry","alone","dismissed","not heard","exhausted","like I had no control","like I had to just survive it"]}]}]},
+   {navLabel:"Why it matters",
+    narr:"Why does this memory matter now?",
+    fields:[{key:"matters",label:"Why this matters",ph:"Type or speak anything to add",
+      groups:[{name:"It matters because…",words:["it shows what I was really dealing with","it explains why I felt so worn down","it is part of the pattern","it affected my choices afterward","it changed how safe I felt","it helps explain the bigger picture"]}]}]},
+   {navLabel:"Proof I can gather",
+    narr:"Is there anything that could help back this up? It is okay if there is no proof yet.",
+    fields:[{key:"proof",label:"Proof I can gather or attach",ph:"Type or speak anything to add",
+      groups:[{name:"I may have…",words:["text messages","emails","photos","screenshots","bank records","court papers","FRO papers","notes from that time","someone who remembers this too"]}]}]},
+   {navLabel:"Your own words",
+    narr:"Anything else you want to say in your own words?",
+    fields:[{key:"own",label:"Anything else?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
+  ],
+  build:function(){
+    const topic=clip(val('topic')), facts=clip(val('facts')), who=clip(val('who')),
+          felt=clip(val('felt')), matters=clip(val('matters')), proof=clip(val('proof')),
+          own=clip(val('own'));
+    let s="";
+    if(topic) s+="This memory is about "+lc(topic)+". ";
+    if(facts) s+="What happened was that "+lcFirst(facts)+". ";
+    if(who) s+="The people involved were: "+who+". ";
+    if(felt) s+="At the time, I felt "+lc(felt)+". ";
+    if(matters) s+="This matters because "+lc(matters)+". ";
+    if(proof) s+="I may be able to back this up with "+lc(proof)+". ";
+    if(own) s+=own+". ";
+    if(!s) s="[Use this page to tell the memory in your own words.]";
+    return s.trim();
+  }
+},
+{
+  id:2, title:"Something Happened Between Us",
+  purpose:"For a memory involving another person, conversation, conflict, or relationship moment.",
+  blurb:"For a moment between Kim and another person, including Joe, Sandra, the boys, family, FRO, a lawyer, or anyone else connected to the story.",
+  pages:[
+   {navLabel:"Who it involved",
+    narr:"Who was this moment with?",
+    fields:[{key:"who",label:"This happened with",ph:"Type or speak a name",
+      groups:[{name:"This involved…",words:["Joe","Sandra","Joe and Sandra","Nick","Josh","both boys","FRO","a lawyer","my mom","my sister","someone from court","someone from school"]}]}]},
+   {navLabel:"How it happened",
+    narr:"How did this happen? Tap what fits.",
+    fields:[{key:"how",label:"How it happened",ph:"Type or speak anything to add",
+      groups:[{name:"It happened through…",words:["a text message","an email","a phone call","an in-person conversation","a letter","court paperwork","FRO paperwork","a message passed through someone else","something I found out after the fact"]}]}]},
+   {navLabel:"What happened",
+    narr:"What actually happened between you?",
+    fields:[{key:"what",label:"What happened?",ph:"Type or speak what happened",groups:[]}]},
+   {navLabel:"What it felt like",
+    narr:"What did it feel like underneath the surface?",
+    fields:[{key:"felt",label:"What it felt like",ph:"Type or speak anything to add",
+      groups:[{name:"It felt like…",words:["I was being blamed","I was being pushed aside","I was being talked down to","I was not being given a choice","I was being pressured","my voice did not matter","I was expected to accept it","I was being treated unfairly"]}]}]},
+   {navLabel:"What I needed",
+    narr:"What would have felt fairer or more respectful?",
+    fields:[{key:"needed",label:"What I needed",ph:"Type or speak anything to add",
+      groups:[{name:"I needed…",words:["to be heard","to be included","a fair conversation","more time to respond","proper information","a chance to explain myself","to be treated with basic respect","to not be pressured"]}]}]},
+   {navLabel:"What changed after",
+    narr:"Did anything change after this moment?",
+    fields:[{key:"changed",label:"What changed after this?",ph:"Type or speak anything to add",
+      groups:[{name:"After that…",words:["I became more guarded","I felt less safe speaking up","I stopped trusting the situation","I felt more anxious","I felt pushed further away","I felt like the rules had changed","I felt like I had less control"]}]}]},
+   {navLabel:"Proof I can gather",
+    narr:"Is there anything that could help prove or explain this memory?",
+    fields:[{key:"proof",label:"Proof I can gather or attach",ph:"Type or speak anything to add",
+      groups:[{name:"I may have…",words:["the message","the email","a screenshot","the letter","court paperwork","FRO paperwork","a note I wrote at the time","someone who remembers what happened"]}]}]},
+   {navLabel:"Your own words",
+    narr:"Anything else you want to add?",
+    fields:[{key:"own",label:"Anything else?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
+  ],
+  build:function(){
+    const who=clip(val('who')), how=clip(val('how')), what=clip(val('what')),
+          felt=clip(val('felt')), needed=clip(val('needed')), changed=clip(val('changed')),
+          proof=clip(val('proof')), own=clip(val('own'));
+    let s="";
+    if(who) s+="This happened with "+who+". ";
+    if(how) s+="It happened through "+lc(how)+". ";
+    if(what) s+="What happened was that "+lcFirst(what)+". ";
+    if(felt) s+="It felt like "+lc(felt)+". ";
+    if(needed) s+="What I needed was "+lc(needed)+". ";
+    if(changed) s+="After that, "+lc(changed)+". ";
+    if(proof) s+="I may be able to back this up with "+lc(proof)+". ";
+    if(own) s+=own+". ";
+    if(!s) s="[Use this page to describe what happened between you and the other person.]";
+    return s.trim();
+  }
+},
+{
+  id:3, title:"A Moment I Remember",
+  purpose:"For one clear scene, snapshot, or memory that stands out.",
+  blurb:"For a specific moment Kim can picture, even if she only remembers fragments. This helps her capture where she was, what was happening, and why the moment stayed with her.",
+  pages:[
+   {navLabel:"The scene",
+    narr:"What do you remember about the scene itself?",
+    fields:[{key:"scene",label:"The scene I remember",ph:"Type or speak what you remember",
+      groups:[{name:"I remember…",words:["where I was standing","where I was sitting","what was in front of me","what the room felt like","what my phone showed","what I had just read","what I had just heard","how quiet everything felt","how tense everything felt"]}]}]},
+   {navLabel:"Where it happened",
+    narr:"Where were you when this happened?",
+    fields:[{key:"where",label:"Where were you?",ph:"Type or speak the place",
+      groups:[{name:"I was…",words:["at home","in my kitchen","in my bedroom","in my car","at work","at school","at court","on the phone","looking at my phone","checking my email"]}]}]},
+   {navLabel:"What was happening",
+    narr:"What was happening in that moment?",
+    fields:[{key:"what",label:"What was happening?",ph:"Type or speak what happened",groups:[]}]},
+   {navLabel:"What I noticed",
+    narr:"What stood out to you most?",
+    fields:[{key:"noticed",label:"What stood out",ph:"Type or speak anything to add",
+      groups:[{name:"What stood out was…",words:["the way it was said","how sudden it felt","how cold it felt","how unfair it felt","how serious it sounded","how little control I had","how alone I felt","how much pressure I felt"]}]}]},
+   {navLabel:"How my body reacted",
+    narr:"Sometimes the body remembers before the words do. What did you feel physically?",
+    fields:[{key:"body",label:"How my body reacted",ph:"Type or speak anything to add",
+      groups:[{name:"My body felt…",words:["tense","shaky","heavy","frozen","sick to my stomach","exhausted","panicked","numb","like I could not breathe properly","like I had to hold everything in"]}]}]},
+   {navLabel:"Why it stayed with me",
+    narr:"Why do you think this memory stayed with you?",
+    fields:[{key:"why",label:"Why it stayed with me",ph:"Type or speak anything to add",
+      groups:[{name:"It stayed with me because…",words:["it was a turning point","it hurt deeply","it made me feel powerless","it showed me how serious things had become","it changed how I saw the situation","it was one more thing I had to carry","it reminded me that I was dealing with more than people saw"]}]}]},
+   {navLabel:"Proof I can gather",
+    narr:"Is there anything that could help anchor this memory?",
+    fields:[{key:"proof",label:"Proof I can gather or attach",ph:"Type or speak anything to add",
+      groups:[{name:"I may have…",words:["a screenshot","an email","a text message","a photo","a document","a note from that time","a calendar entry","bank records","court papers"]}]}]},
+   {navLabel:"Your own words",
+    narr:"Anything else you want to say?",
+    fields:[{key:"own",label:"Anything else?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
+  ],
+  build:function(){
+    const scene=clip(val('scene')), where=clip(val('where')), what=clip(val('what')),
+          noticed=clip(val('noticed')), body=clip(val('body')), why=clip(val('why')),
+          proof=clip(val('proof')), own=clip(val('own'));
+    let s="";
+    if(scene) s+="I remember "+lc(scene)+". ";
+    if(where) s+="I was "+lc(where)+". ";
+    if(what) s+="What was happening was that "+lcFirst(what)+". ";
+    if(noticed) s+="What stood out was "+lc(noticed)+". ";
+    if(body) s+="My body felt "+lc(body)+". ";
+    if(why) s+="This stayed with me because "+lc(why)+". ";
+    if(proof) s+="I may be able to back this up with "+lc(proof)+". ";
+    if(own) s+=own+". ";
+    if(!s) s="[Use this page to describe the moment you remember.]";
+    return s.trim();
+  }
+},
+{
+  id:4, title:"Something I Realized or Decided",
+  purpose:"For a moment when Kim understood something, accepted something, or made a choice.",
+  blurb:"For a memory where the important part is what Kim came to understand afterward. This can capture turning points, hard decisions, and moments of clarity.",
+  pages:[
+   {navLabel:"What led to it",
+    narr:"What was happening before you realized something or made a decision?",
+    fields:[{key:"before",label:"What was happening before this?",ph:"Type or speak what led up to it",
+      groups:[{name:"Before this…",words:["I had been under pressure for a long time","I was trying to keep up with everything","I was scared to push back","I was exhausted","I was trying to keep the peace","I was trying to protect the boys","I was doing the best I could with what I had"]}]}]},
+   {navLabel:"What I realized",
+    narr:"What did you realize?",
+    fields:[{key:"realized",label:"What I realized",ph:"Type or speak what you realized",
+      groups:[{name:"I realized that…",words:["I could not keep living under that much pressure","I needed help","I had been carrying too much alone","the situation was not fair","I had to start protecting myself too","I needed to rebuild my life","I needed to stop pretending I was okay"]}]}]},
+   {navLabel:"What I decided",
+    narr:"Did you make a decision because of this?",
+    fields:[{key:"decided",label:"What I decided",ph:"Type or speak what you decided",
+      groups:[{name:"I decided that…",words:["I needed to go back to school","I needed to find a different kind of work","I needed to ask for help","I needed to start over","I needed to focus on survival","I needed to protect my mental health","I needed to stop carrying everything silently"]}]}]},
+   {navLabel:"Why it mattered",
+    narr:"Why was this realization or decision important?",
+    fields:[{key:"mattered",label:"Why it mattered",ph:"Type or speak anything to add",
+      groups:[{name:"It mattered because…",words:["it changed how I saw my situation","it helped me understand what I had been living through","it showed me I could not keep going the same way","it was the beginning of me trying to rebuild","it helped me see that I needed support","it was one of the first times I admitted how bad things had become"]}]}]},
+   {navLabel:"What was hard",
+    narr:"What made this hard to do?",
+    fields:[{key:"hard",label:"What was hard about it",ph:"Type or speak anything to add",
+      groups:[{name:"It was hard because…",words:["I was scared","I felt guilty","I was already worn down","I did not have money for a fight","I did not know where to start","I was afraid of making things worse","I felt like I had no safety net"]}]}]},
+   {navLabel:"What helped",
+    narr:"Was there anything that helped you take the next step?",
+    fields:[{key:"helped",label:"What helped",ph:"Type or speak anything to add",
+      groups:[{name:"What helped was…",words:["school gave me something to work toward","therapy helped me cope","support from family helped me keep going","thinking about my future helped me keep moving","the boys gave me a reason to keep trying","I knew I had to rebuild somehow"]}]}]},
+   {navLabel:"Proof I can gather",
+    narr:"Is there anything that shows this decision or change?",
+    fields:[{key:"proof",label:"Proof I can gather or attach",ph:"Type or speak anything to add",
+      groups:[{name:"I may have…",words:["school records","emails","application records","therapy records","messages from that time","financial records","proof of job searches","proof of my unpaid placement"]}]}]},
+   {navLabel:"Your own words",
+    narr:"Anything else you want to add?",
+    fields:[{key:"own",label:"Anything else?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
+  ],
+  build:function(){
+    const before=clip(val('before')), realized=clip(val('realized')), decided=clip(val('decided')),
+          mattered=clip(val('mattered')), hard=clip(val('hard')), helped=clip(val('helped')),
+          proof=clip(val('proof')), own=clip(val('own'));
+    let s="";
+    if(before) s+="Before this, "+lc(before)+". ";
+    if(realized) s+="I realized that "+lc(realized)+". ";
+    if(decided) s+="I decided that "+lc(decided)+". ";
+    if(mattered) s+="This mattered because "+lc(mattered)+". ";
+    if(hard) s+="It was hard because "+lc(hard)+". ";
+    if(helped) s+="What helped was that "+lc(helped)+". ";
+    if(proof) s+="I may be able to back this up with "+lc(proof)+". ";
+    if(own) s+=own+". ";
+    if(!s) s="[Use this page to describe what you realized or decided.]";
+    return s.trim();
+  }
+},
+{
+  id:5, title:"Something That Changed",
+  purpose:"For before-and-after memories where life, parenting, money, or relationships shifted.",
+  blurb:"For a memory where something changed. This can include the boys moving, Sandra becoming involved, FRO starting, job loss, school, housing, money, parenting, or Kim's relationship with the boys.",
+  pages:[
+   {navLabel:"What changed",
+    narr:"What changed? Tap anything that fits, or add your own.",
+    fields:[{key:"change",label:"What changed",ph:"Type or speak anything to add",
+      groups:[{name:"What changed was…",words:["where the boys lived","how parenting worked","how communication happened","how expenses were handled","how much pressure I was under","my financial situation","my job situation","my housing situation","my relationship with the boys","how safe I felt speaking up"]}]}]},
+   {navLabel:"Before the change",
+    narr:"What was it like before this changed?",
+    fields:[{key:"before",label:"Before the change",ph:"Type or speak what it was like before",
+      groups:[{name:"Before that…",words:["things felt more balanced","I had more say","I felt more included","I had more stability","I could manage better","I knew what to expect","I felt closer to the situation","I was still trying to keep everything together"]}]}]},
+   {navLabel:"After the change",
+    narr:"What was it like after this changed?",
+    fields:[{key:"after",label:"After the change",ph:"Type or speak what it was like after",
+      groups:[{name:"After that…",words:["everything felt harder","I felt pushed aside","I felt more pressure","I had less control","I felt more afraid to speak up","money became more stressful","communication became more difficult","I felt like I was always trying to catch up"]}]}]},
+   {navLabel:"Who was affected",
+    narr:"Who was affected by this change?",
+    fields:[{key:"affected",label:"Who was affected?",ph:"Type or speak anyone else",
+      groups:[{name:"This affected…",words:["me","Nick","Josh","both boys","my relationship with the boys","my mental health","my finances","my ability to parent normally","my ability to plan for the future"]}]}]},
+   {navLabel:"Why it mattered",
+    narr:"Why did this change matter?",
+    fields:[{key:"mattered",label:"Why it mattered",ph:"Type or speak anything to add",
+      groups:[{name:"It mattered because…",words:["it changed the whole situation","it created more pressure on me","it made me feel less included as their mom","it affected my financial stability","it affected my emotional health","it made it harder to speak up","it became part of a bigger pattern"]}]}]},
+   {navLabel:"What I tried to do",
+    narr:"What did you try to do after things changed?",
+    fields:[{key:"tried",label:"What I tried to do",ph:"Type or speak anything to add",
+      groups:[{name:"I tried to…",words:["keep up","stay calm","keep the peace","do what I could afford","stay connected to the boys","rebuild my life","find a way forward","handle it without making things worse"]}]}]},
+   {navLabel:"Proof I can gather",
+    narr:"Is there anything that helps show this change?",
+    fields:[{key:"proof",label:"Proof I can gather or attach",ph:"Type or speak anything to add",
+      groups:[{name:"I may have…",words:["messages","emails","court papers","FRO papers","financial records","school records","photos","screenshots","notes from that time","someone who remembers the change"]}]}]},
+   {navLabel:"Your own words",
+    narr:"Anything else you want to add?",
+    fields:[{key:"own",label:"Anything else?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
+  ],
+  build:function(){
+    const change=clip(val('change')), before=clip(val('before')), after=clip(val('after')),
+          affected=clip(val('affected')), mattered=clip(val('mattered')), tried=clip(val('tried')),
+          proof=clip(val('proof')), own=clip(val('own'));
+    let s="";
+    if(change) s+="What changed was "+lc(change)+". ";
+    if(before) s+="Before that, "+lc(before)+". ";
+    if(after) s+="After that, "+lc(after)+". ";
+    if(affected) s+="This affected "+lc(affected)+". ";
+    if(mattered) s+="It mattered because "+lc(mattered)+". ";
+    if(tried) s+="I tried to "+lc(tried)+". ";
+    if(proof) s+="I may be able to back this up with "+lc(proof)+". ";
+    if(own) s+=own+". ";
+    if(!s) s="[Use this page to describe what changed and how it affected you.]";
+    return s.trim();
+  }
+},
+
   id:6, title:"Money & Sacrifice",
   purpose:"For times you sold, borrowed, or went without to keep up.",
   blurb:"For a time you sold, borrowed, or went without to keep up, and what it cost you.",
