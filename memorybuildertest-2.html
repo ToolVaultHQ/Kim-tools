@@ -1099,77 +1099,95 @@ const TEMPLATES = [
         "school records",
         "placement records",
         "FRO letters",
-        "lawyer letters",
-        "text messages",
-        "emails",
-        "medical records",
-        "therapy records",
-        "receipts",
-        "photos",
-        "notes I wrote at the time",
-        "witness messages"
-      ],
-      boxLabel: "Other proof"
-    },
-    {
-      title: "My own words",
-      narrator: "Type or speak anything else I want to say about what this has cost me.",
-      key: "ownWords",
-      chips: [],
-      boxLabel: "Anything else I want to say"
-    }
+{
+  id:14,
+  title:"What This Has Cost Me",
+  purpose:"For describing the emotional, financial, physical, mental, housing, work, school, parenting, and confidence toll this has taken.",
+  blurb:"For memories about what this has cost you in daily life, what you had to give up or change, what made it harder, and what proof you have or may be able to find.",
+  pages:[
+   {navLabel:"When this was happening",
+    narr:"When was this affecting you? An exact date or rough timing is okay.",
+    fields:[{key:"when",label:"This was happening",ph:"Type or speak an exact date or rough timing",
+      groups:[{name:"Rough timing",words:["around 2016","around 2017","around 2018","around 2019","around 2020","around 2021","around 2022","around 2023","around 2024","around 2025","around 2026","during the time I was dealing with FRO","after I sold my house","while I was in school","during my unpaid placement","while I was trying to manage without steady income","during a time I was already under financial pressure"]}]}]},
+
+   {navLabel:"What this affected",
+    narr:"What parts of your life or well-being were affected?",
+    fields:[{key:"affected",label:"This affected",ph:"Type or speak anything to add",
+      groups:[{name:"Areas affected",words:["my stress level","my sleep","my mental health","my confidence","my self-worth","my finances","my housing","my ability to work","my ability to focus","my parenting","my relationship with the boys","my schooling","my sense of safety","my ability to plan ahead","my physical health","my ability to feel settled"]}]}]},
+
+   {navLabel:"How it felt",
+    narr:"What words best describe how this felt for you?",
+    fields:[{key:"felt",label:"It felt",ph:"Type or speak anything to add",
+      groups:[{name:"How it felt",words:["overwhelming","exhausting","embarrassing","scary","unfair","isolating","defeating","humiliating","confusing","heavy","constant","like I could not keep up","like I was falling behind no matter what I did","like I could not catch my breath"]}]}]},
+
+   {navLabel:"What I had to give up or change",
+    narr:"What did you have to give up, change, or do differently?",
+    fields:[{key:"changed",label:"I had to",ph:"Type or speak anything to add",
+      groups:[{name:"What changed",words:["sell my home","use my pension","take on more debt","cut back on essentials","delay getting help","focus on surviving","go back to school","accept unpaid placement","live with constant financial pressure","make choices I would not otherwise have made","keep trying even when I was exhausted","put some plans on hold","make difficult decisions about money"]}]}]},
+
+   {navLabel:"What made it harder",
+    narr:"What made it harder to cope, act, or keep up?",
+    fields:[{key:"harder",label:"What made it harder was that",ph:"Type or speak anything to add",
+      groups:[{name:"What made it harder",words:["I did not have enough money coming in","I was dealing with FRO pressure","I was afraid of making things worse","I felt intimidated by Joe and Sandra","I did not know what my options were","I could not afford a lawyer","I was trying to keep the peace","I was trying not to upset the boys","I was trying to rebuild my life","I was dealing with school and placement","I was scared of losing even more","I had too many problems to manage at once","I did not know where to turn for help"]}]}]},
+
+   {navLabel:"What this cost me day to day",
+    narr:"How did this affect your daily life or the choices you had to make?",
+    fields:[{key:"daily",label:"In my daily life",ph:"Type or speak anything to add",
+      groups:[{name:"Daily impact",words:["I had to focus on getting through one day at a time","I worried about how I would pay my basic bills","I had less energy for school or work","I found it harder to concentrate","I put off getting help because of the cost","I had to use money I had saved for the future","I had less time and energy for the boys","I had to keep going even when I felt exhausted","I had to make choices between important needs","I found it harder to plan for a stable future"]}]}]},
+
+   {navLabel:"Proof I have or may have",
+    narr:"What proof do you have, or what might you be able to find?",
+    fields:[
+      {key:"proofLevel",label:"Choose the wording that fits",ph:"Type or speak anything else",
+        groups:[{name:"Proof status",words:["I have","I may have","I need to look for"]}]},
+      {key:"proof",label:"Proof",ph:"Type or speak anything to add",
+        groups:[{name:"Possible proof",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]}
+    ]},
+
+   {navLabel:"Your own words",
+    narr:"Anything else you want to add about what this has cost you?",
+    fields:[{key:"own",label:"Anything else?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
   ],
-  build: function(d){
-    let s = "";
+  build:function(){
+    const clean=function(x){
+      return (x||"").trim().replace(/[.!?]+$/,"");
+    };
 
-    const dateText = buildTemplate14Date(d);
-    const affected = template14List(d.affected, d.affected_more);
-    const felt = template14List(d.felt, d.felt_more);
-    const changed = template14List(d.changed, d.changed_more);
-    const harder = template14List(d.harder, d.harder_more);
-    const proofStatus = template14List(d.proofStatus, d.proofStatus_more);
-    const proof = template14List(d.proof, d.proof_more);
-    const ownWords = template14Clean(d.ownWords_more || d.ownWords || "");
+    const when=clean(val('when')),
+          affected=clean(val('affected')),
+          felt=clean(val('felt')),
+          changed=clean(val('changed')),
+          harder=clean(val('harder')),
+          daily=clean(val('daily')),
+          proofLevel=clean(val('proofLevel')),
+          proof=clean(val('proof')),
+          own=clean(val('own'));
 
-    if(dateText && affected){
-      s += dateText + ", this affected " + affected + ". ";
-    } else if(dateText){
-      s += dateText + ", this had a real effect on me. ";
-    } else if(affected){
-      s += "This affected " + affected + ". ";
-    }
+    let s="";
 
-    if(felt){
-      s += "It felt " + felt + ". ";
-    }
-
-    if(changed){
-      s += "What this cost me was not only money. I had to " + changed + ". ";
-    }
-
-    if(harder){
-      s += "What made it harder was that " + harder + ". ";
-    }
+    if(when) s+="This was happening "+when+". ";
+    if(affected) s+="This affected "+affected+". ";
+    if(felt) s+="It felt "+felt+". ";
+    if(changed) s+="I had to "+changed+". ";
+    if(harder) s+="What made it harder was that "+harder+". ";
+    if(daily) s+="In my daily life, "+daily+". ";
 
     if(proof){
-      if(proofStatus.includes("I have proof")){
-        s += "I have proof that includes " + proof + ". ";
-      } else if(proofStatus.includes("I may have proof")){
-        s += "I may have proof that includes " + proof + ". ";
-      } else if(proofStatus.includes("I need to look for it")){
-        s += "I need to look for proof that may include " + proof + ". ";
+      const level=proofLevel || "I may have";
+      if(level==="I need to look for"){
+        s+="I need to look for proof such as "+proof+". ";
       } else {
-        s += "Proof may include " + proof + ". ";
+        s+=level+" proof such as "+proof+". ";
       }
-    } else if(proofStatus){
-      s += proofStatus + ". ";
+    } else if(proofLevel){
+      s+=proofLevel+" proof. ";
     }
 
-    if(ownWords){
-      s += ownWords + ". ";
-    }
+    if(own) s+=own+". ";
 
-    return template14Tidy(s);
+    if(!s) s="[Use this page to describe what this has cost you, how it affected your life, what made it harder, and what proof you have or may be able to find.]";
+
+    return s.trim();
   }
 },
 
