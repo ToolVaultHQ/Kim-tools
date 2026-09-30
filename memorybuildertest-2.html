@@ -1535,7 +1535,12 @@ function renderPick(){
 }
 function startT(id){STATE.tid=id;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.lastAppended='';STATE.edited=false;T=TEMPLATES.find(t=>t.id===id);goQ(0);}
 
-function goQ(i){STATE.qi=i;STATE.screen='q';save();renderQuestion();}
+function goQ(i){
+  STATE.qi=i;
+  STATE.screen='q';
+  save();
+  renderQuestion(true);
+}
 function renderQuestion(scrollTop){
   scrollTop = scrollTop === true;
 
@@ -1619,18 +1624,20 @@ function renderQuestion(scrollTop){
   buildJump();
   afterRender();
 
-  setTimeout(function(){
-    window.scrollTo({top:0,left:0,behavior:"auto"});
-    document.documentElement.scrollTop=0;
-    document.body.scrollTop=0;
-    if(app && app.scrollIntoView) app.scrollIntoView({block:"start"});
-  },0);
+  if(scrollTop){
+    setTimeout(function(){
+      window.scrollTo({top:0,left:0,behavior:"auto"});
+      document.documentElement.scrollTop=0;
+      document.body.scrollTop=0;
+      if(app && app.scrollIntoView) app.scrollIntoView({block:"start"});
+    },0);
 
-  setTimeout(function(){
-    window.scrollTo({top:0,left:0,behavior:"auto"});
-    document.documentElement.scrollTop=0;
-    document.body.scrollTop=0;
-  },120);
+    setTimeout(function(){
+      window.scrollTo({top:0,left:0,behavior:"auto"});
+      document.documentElement.scrollTop=0;
+      document.body.scrollTop=0;
+    },120);
+  }
 }
 
 function pageDone(page){
