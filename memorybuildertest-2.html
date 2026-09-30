@@ -1607,7 +1607,32 @@ function toggleWord(key,w){
   STATE.edited=false; save(); renderQuestion();
 }
 function saveTxt(key){STATE.ans[key+'_txt']=document.getElementById('txt_'+key).value;STATE.edited=false;save();}
-function skipQ(){T.pages[STATE.qi].fields.forEach(f=>{delete STATE.ans[f.key];STATE.ans[f.key+'_txt']='';});save();nextQ();}
+function skipQ(){
+  const page=T.pages[STATE.qi];
+
+  (page.fields||[]).forEach(f=>{
+    delete STATE.ans[f.key];
+    STATE.ans[f.key+'_txt']='';
+  });
+
+  if(page.proofChooser){
+    page.proofChooser.statuses.forEach(s=>{
+      delete STATE.ans[s.key];
+      STATE.ans[s.key+'_txt']='';
+    });
+  }
+
+  STATE.timingError="";
+  save();
+
+  if(STATE.qi<T.pages.length-1){
+    STATE.qi++;
+    save();
+    renderQuestion();
+  } else {
+    renderReview();
+  }
+
 function validateBeforeNext(){
   T=TEMPLATES.find(t=>t.id===STATE.tid);
   const page=T.pages[STATE.qi];
