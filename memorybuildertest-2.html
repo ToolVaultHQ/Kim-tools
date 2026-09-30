@@ -1541,11 +1541,16 @@ function renderQuestion(){
   const page=T.pages[STATE.qi];
 
   let h=`<div class="screen">${titleBar()}<div class="narr">${page.narr}</div>`;
-if(page.proofChooser){
+
+  if(STATE.timingError){
+    h+=`<div id="timingWarning" style="background:#ffe8e8;border:1px solid #d33;color:#9b0000;border-radius:12px;padding:10px 12px;margin:10px 0;font-weight:700;">${esc(STATE.timingError)}</div>`;
+  }
+
+  if(page.proofChooser){
     const pc=page.proofChooser;
     const validKeys=pc.statuses.map(s=>s.key);
     const activeKey=validKeys.includes(STATE.proofMode) ? STATE.proofMode : pc.statuses[0].key;
-    const active=pc.statuses.find(s=>s.key===activeKey);
+    const active=pc.statuses.find(s=>s.key===activeKey) || pc.statuses[0];
 
     h+=`<div class="qlabel">Proof type</div>`;
     h+=`<div>`;
@@ -1562,42 +1567,6 @@ if(page.proofChooser){
 
     pc.words.forEach(w=>{
       const on=(STATE.ans[activeKey]&&STATE.ans[activeKey].includes(w)) ? 'on' : '';
-      h+=`<span class="chip ${on}" onclick="toggleWord('${activeKey}',this.dataset.w)" data-w="${esc(w)}">${esc(w)}</span>`;
-    });
-
-    h+=`<div class="typewrap">
-          <input type="text" id="txt_${activeKey}" placeholder="Type anything else for ${esc(active.label)}" value="${esc(STATE.ans[activeKey+'_txt']||'')}" oninput="saveTxt('${activeKey}')">
-          <button class="mic" onclick="mic('${activeKey}')" title="Speak">🎤</button>
-        </div>`;
-
-    h+=`<div class="fnote">Switch proof type above. Your choices stay saved separately.</div>`;
-  }
-
-  if(STATE.timingError){
-    h+=`<div id="timingWarning" style="background:#ffe8e8;border:1px solid #d33;color:#9b0000;border-radius:12px;padding:10px 12px;margin:10px 0;font-weight:700;">${esc(STATE.timingError)}</div>`;
-  }
-
-  if(page.proofChooser){
-    const pc=page.proofChooser;
-    const validKeys=pc.statuses.map(s=>s.key);
-    const activeKey=validKeys.includes(STATE.proofMode)?STATE.proofMode:pc.statuses[0].key;
-    const active=pc.statuses.find(s=>s.key===activeKey);
-
-    h+=`<div class="qlabel">Proof type</div>`;
-    h+=`<div>`;
-
-    pc.statuses.forEach(st=>{
-      const count=(STATE.ans[st.key]||[]).length + ((STATE.ans[st.key+'_txt']||'').trim()?1:0);
-      const on=st.key===activeKey?'on':'';
-      h+=`<span class="chip ${on}" onclick="setProofMode('${st.key}')">${st.label}${count?' ('+count+')':''}</span>`;
-    });
-
-    h+=`</div>`;
-
-    h+=`<div class="groupname">${active.label}</div>`;
-
-    pc.words.forEach(w=>{
-      const on=(STATE.ans[activeKey]&&STATE.ans[activeKey].includes(w))?'on':'';
       h+=`<span class="chip ${on}" onclick="toggleWord('${activeKey}',this.dataset.w)" data-w="${esc(w)}">${esc(w)}</span>`;
     });
 
@@ -1661,43 +1630,18 @@ if(page.proofChooser){
     document.body.scrollTop=0;
   },120);
 }
-  function renderQuestion(){
-  T=TEMPLATES.find(t=>t.id===STATE.tid);
-  const page=T.pages[STATE.qi];
-  let h=`<div class="screen">${titleBar()}<div class="narr">${page.narr}</div>`;
-  page.fields.forEach(f=>{
-    h+=`<div><div class="qlabel">${f.label}</div>${f.note?`<div class="fnote">${f.note}</div>`:''}`;
-    (f.groups||[]).forEach(g=>{
-      h+=`<div class="groupname">${g.name}</div>`;
-      g.words.forEach(w=>{
-        const on=(STATE.ans[f.key]&&STATE.ans[f.key].includes(w))?'on':'';
-        h+=`<span class="chip ${on}" onclick="toggleWord('${f.key}',this.dataset.w)" data-w="${esc(w)}">${esc(w)}</span>`;
-      });
-    });
-    if(f.datepicker){
-      h+=`<div class="typewrap">
-            <input type="date" id="txt_${f.key}" value="${esc(STATE.ans[f.key+'_txt']||'')}" oninput="saveTxt('${f.key}')">
-          </div>
-          <div class="fnote">Know the exact day? Pick it here. If not, just tap a season and year above.</div>`;
-    } else {
-      h+=`<div class="typewrap">
-            <input type="text" id="txt_${f.key}" placeholder="${esc(f.ph||'Type or speak your own words')}" value="${esc(STATE.ans[f.key+'_txt']||'')}" oninput="saveTxt('${f.key}')">
-            <button class="mic" onclick="mic('${f.key}')" title="Speak">🎤</button>
-          </div>`;
-    }
-    h+=`</div>`;
-  });
-  h+=`<div class="navbtns">
-        ${STATE.qi>0?'<button class="b sec" onclick="goQ('+(STATE.qi-1)+')">← Back</button>':'<button class="b sec" onclick="renderPick()">← Topics</button>'}
-        <button class="b skip" onclick="skipQ()">Skip</button>
-        <button class="b prim" onclick="nextQ()">${STATE.qi===T.pages.length-1?'Finish ✓':'Next →'}</button>
-      </div>
-      <button class="jumpbtn" onclick="toggleJump()">↕ Jump to a section</button>
-      <div class="jumplist" id="jl"></div>
-      </div>`;
-  app.innerHTML=h; buildJump(); afterRender();
+
+function pageDone(page){
+  if(page.proofChooser){
+    return page.proofChooser.statuses.some(s=>
+      (STATE.ans[s.key]&&STATE.ans[s.key].length) || STATE.ans[s.key+'_txt']
+    );
+  }
+
+  return (page.fields||[]).some(f=>
+    (STATE.ans[f.key]&&STATE.ans[f.key].length) || STATE.ans[f.key+'_txt']
+  );
 }
-function pageDone(page){return page.fields.some(f=>(STATE.ans[f.key]&&STATE.ans[f.key].length)||STATE.ans[f.key+'_txt']);}
 function buildJump(){
   const jl=document.getElementById('jl');
   let h=T.pages.map((p,i)=>`<div class="${pageDone(p)?'done':''}" onclick="goQ(${i})">${p.navLabel}</div>`).join('');
