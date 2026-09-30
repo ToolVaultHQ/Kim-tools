@@ -1541,6 +1541,37 @@ function renderQuestion(){
   const page=T.pages[STATE.qi];
 
   let h=`<div class="screen">${titleBar()}<div class="narr">${page.narr}</div>`;
+if(page.proofChooser){
+    const pc=page.proofChooser;
+    const validKeys=pc.statuses.map(s=>s.key);
+    const activeKey=validKeys.includes(STATE.proofMode) ? STATE.proofMode : pc.statuses[0].key;
+    const active=pc.statuses.find(s=>s.key===activeKey);
+
+    h+=`<div class="qlabel">Proof type</div>`;
+    h+=`<div>`;
+
+    pc.statuses.forEach(st=>{
+      const count=(STATE.ans[st.key]||[]).length + ((STATE.ans[st.key+'_txt']||'').trim()?1:0);
+      const on=st.key===activeKey ? 'on' : '';
+      h+=`<span class="chip ${on}" onclick="setProofMode('${st.key}')">${st.label}${count?' ('+count+')':''}</span>`;
+    });
+
+    h+=`</div>`;
+
+    h+=`<div class="groupname">${active.label}</div>`;
+
+    pc.words.forEach(w=>{
+      const on=(STATE.ans[activeKey]&&STATE.ans[activeKey].includes(w)) ? 'on' : '';
+      h+=`<span class="chip ${on}" onclick="toggleWord('${activeKey}',this.dataset.w)" data-w="${esc(w)}">${esc(w)}</span>`;
+    });
+
+    h+=`<div class="typewrap">
+          <input type="text" id="txt_${activeKey}" placeholder="Type anything else for ${esc(active.label)}" value="${esc(STATE.ans[activeKey+'_txt']||'')}" oninput="saveTxt('${activeKey}')">
+          <button class="mic" onclick="mic('${activeKey}')" title="Speak">🎤</button>
+        </div>`;
+
+    h+=`<div class="fnote">Switch proof type above. Your choices stay saved separately.</div>`;
+  }
 
   if(STATE.timingError){
     h+=`<div id="timingWarning" style="background:#ffe8e8;border:1px solid #d33;color:#9b0000;border-radius:12px;padding:10px 12px;margin:10px 0;font-weight:700;">${esc(STATE.timingError)}</div>`;
