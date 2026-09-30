@@ -1599,7 +1599,11 @@ function setProofMode(key){
   save();
   renderQuestion();
 }
-
+function setProofMode(key){
+  STATE.proofMode=key;
+  save();
+  renderQuestion();
+}
 function toggleWord(key,w){
   STATE.ans[key]=STATE.ans[key]||[];
   const i=STATE.ans[key].indexOf(w);
