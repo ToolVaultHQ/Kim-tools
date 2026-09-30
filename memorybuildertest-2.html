@@ -1720,11 +1720,27 @@ function validateBeforeNext(){
 
     const seasons=STATE.ans[seasonKey]||[];
     const years=STATE.ans[yearKey]||[];
+    const exactDate=((STATE.ans.exactDate_txt||"").trim());
 
-    if(seasons.length && !years.length){
-      STATE.timingError="Please choose at least one year with the season, or clear the season.";
+    if(!exactDate && seasons.length && !years.length){
+      STATE.timingError="Please choose one year with the season, or clear the season.";
+    }
+
+    if(!exactDate && page.oneYearOnly && years.length>1){
+      STATE.timingError="Please choose only one year for this memory. If it happened in more than one year, add that in the review box.";
+    }
+
+    if(STATE.timingError){
       save();
       renderQuestion();
+
+      setTimeout(function(){
+        alert(STATE.timingError);
+        window.scrollTo({top:0,left:0,behavior:"smooth"});
+        document.documentElement.scrollTop=0;
+        document.body.scrollTop=0;
+      },80);
+
       return false;
     }
   }
@@ -1732,7 +1748,6 @@ function validateBeforeNext(){
   save();
   return true;
 }
-
 function nextQ(){ if(!validateBeforeNext()) return; if(STATE.qi<T.pages.length-1) goQ(STATE.qi+1); else renderDone(true); }
 
 function renderDone(rebuild){
