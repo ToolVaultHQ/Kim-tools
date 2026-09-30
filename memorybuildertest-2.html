@@ -977,16 +977,19 @@ const TEMPLATES = [
     return s.trim();
   }
  },
-{
+    {
   id:14,
   title:"What This Has Cost Me",
   purpose:"For describing the emotional, financial, physical, mental, housing, work, school, parenting, and confidence toll this has taken.",
   blurb:"For memories about what this has cost you in daily life, what you had to give up or change, what made it harder, and what proof you have or may be able to find.",
   pages:[
    {navLabel:"When this was happening",
-    narr:"When was this affecting you? An exact date or rough timing is okay.",
-    fields:[{key:"when",label:"This was happening",ph:"Type or speak an exact date or rough timing",
-      groups:[{name:"Rough timing",words:["around 2016","around 2017","around 2018","around 2019","around 2020","around 2021","around 2022","around 2023","around 2024","around 2025","around 2026","during the time I was dealing with FRO","after I sold my house","while I was in school","during my unpaid placement","while I was trying to manage without steady income","during a time I was already under financial pressure"]}]}]},
+    narr:"If you remember the exact date, enter it as day/month/year. You can also choose rough timing below.",
+    fields:[
+      {key:"exactDate",label:"Exact date, if you know it",ph:"DD/MM/YYYY",groups:[]},
+      {key:"when",label:"Or choose rough timing",ph:"Type or speak rough timing",
+        groups:[{name:"Rough timing",words:["around 2016","around 2017","around 2018","around 2019","around 2020","around 2021","around 2022","around 2023","around 2024","around 2025","around 2026","during the time I was dealing with FRO","after I sold my house","while I was in school","during my unpaid placement","while I was trying to manage without steady income","during a time I was already under financial pressure"]}]}
+    ]},
 
    {navLabel:"What this affected",
     narr:"What parts of your life or well-being were affected?",
@@ -1003,6 +1006,15 @@ const TEMPLATES = [
     fields:[{key:"changed",label:"I had to",ph:"Type or speak anything to add",
       groups:[{name:"What changed",words:["sell my home","use my pension","take on more debt","cut back on essentials","delay getting help","focus on surviving","go back to school","accept unpaid placement","live with constant financial pressure","make choices I would not otherwise have made","keep trying even when I was exhausted","put some plans on hold","make difficult decisions about money"]}]}]},
 
+   {navLabel:"Child support",
+    narr:"If child support was part of what you were managing, choose anything that fits.",
+    fields:[
+      {key:"supportCurrent",label:"Trying to stay current",ph:"Type or speak anything to add",
+        groups:[{name:"Paying child support",words:["I was trying to make sure I paid my child support"]}]},
+      {key:"supportBehind",label:"Concern about falling behind",ph:"Type or speak anything to add",
+        groups:[{name:"Avoiding falling behind",words:["I was trying to make sure I did not fall behind on my child support"]}]}
+    ]},
+
    {navLabel:"What made it harder",
     narr:"What made it harder to cope, act, or keep up?",
     fields:[{key:"harder",label:"What made it harder was that",ph:"Type or speak anything to add",
@@ -1013,14 +1025,20 @@ const TEMPLATES = [
     fields:[{key:"daily",label:"In my daily life",ph:"Type or speak anything to add",
       groups:[{name:"Daily impact",words:["I had to focus on getting through one day at a time","I worried about how I would pay my basic bills","I had less energy for school or work","I found it harder to concentrate","I put off getting help because of the cost","I had to use money I had saved for the future","I had less time and energy for the boys","I had to keep going even when I felt exhausted","I had to make choices between important needs","I found it harder to plan for a stable future"]}]}]},
 
-   {navLabel:"Proof I have or may have",
-    narr:"What proof do you have, or what might you be able to find?",
-    fields:[
-      {key:"proofLevel",label:"Choose the wording that fits",ph:"Type or speak anything else",
-        groups:[{name:"Proof status",words:["I have","I may have","I need to look for"]}]},
-      {key:"proof",label:"Proof",ph:"Type or speak anything to add",
-        groups:[{name:"Possible proof",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]}
-    ]},
+   {navLabel:"Proof I have",
+    narr:"Choose any proof you already have. You can select more than one item.",
+    fields:[{key:"proofHave",label:"I have",ph:"Type or speak anything else",
+      groups:[{name:"Proof I have",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]}]},
+
+   {navLabel:"Proof I may have",
+    narr:"Choose any proof you may have. You can select more than one item.",
+    fields:[{key:"proofMayHave",label:"I may have",ph:"Type or speak anything else",
+      groups:[{name:"Proof I may have",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]}]},
+
+   {navLabel:"Proof I need to look for",
+    narr:"Choose anything you need to look for. You can select more than one item.",
+    fields:[{key:"proofNeedLook",label:"I need to look for",ph:"Type or speak anything else",
+      groups:[{name:"Proof I need to look for",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]}]},
 
    {navLabel:"Your own words",
     narr:"Anything else you want to add about what this has cost you?",
@@ -1031,35 +1049,81 @@ const TEMPLATES = [
       return (x||"").trim().replace(/[.!?]+$/,"");
     };
 
-    const when=clean(val('when')),
-          affected=clean(val('affected')),
-          felt=clean(val('felt')),
-          changed=clean(val('changed')),
-          harder=clean(val('harder')),
-          daily=clean(val('daily')),
-          proofLevel=clean(val('proofLevel')),
-          proof=clean(val('proof')),
-          own=clean(val('own'));
+    const formatExactDate=function(value){
+      const raw=clean(value);
+      if(!raw) return "";
+
+      let day, month, year;
+      let match=raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+
+      if(match){
+        day=Number(match[1]);
+        month=Number(match[2]);
+        year=Number(match[3]);
+      } else {
+        match=raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+        if(match){
+          year=Number(match[1]);
+          month=Number(match[2]);
+          day=Number(match[3]);
+        } else {
+          return "";
+        }
+      }
+
+      const check=new Date(Date.UTC(year,month-1,day));
+      if(check.getUTCFullYear()!==year ||
+         check.getUTCMonth()!==month-1 ||
+         check.getUTCDate()!==day){
+        return "";
+      }
+
+      const months=["January","February","March","April","May","June",
+                    "July","August","September","October","November","December"];
+
+      return months[month-1]+" "+day+", "+year;
+    };
+
+    const exactDate=formatExactDate(val("exactDate"));
+    const when=clean(val("when")),
+          affected=clean(val("affected")),
+          felt=clean(val("felt")),
+          changed=clean(val("changed")),
+          supportCurrent=clean(val("supportCurrent")),
+          supportBehind=clean(val("supportBehind")),
+          harder=clean(val("harder")),
+          daily=clean(val("daily")),
+          proofHave=clean(val("proofHave")),
+          proofMayHave=clean(val("proofMayHave")),
+          proofNeedLook=clean(val("proofNeedLook")),
+          own=clean(val("own"));
 
     let s="";
 
-    if(when) s+="This was happening "+when+". ";
+    if(exactDate){
+      s+="On "+exactDate+", I was dealing with these effects. ";
+    } else if(when){
+      s+="This was happening "+when+". ";
+    } else {
+      const rawExactDate=clean(val("exactDate"));
+      if(rawExactDate){
+        s+="The exact date I entered was "+rawExactDate+". ";
+      }
+    }
+
     if(affected) s+="This affected "+affected+". ";
     if(felt) s+="It felt "+felt+". ";
     if(changed) s+="I had to "+changed+". ";
+
+    if(supportCurrent) s+=supportCurrent+". ";
+    if(supportBehind) s+=supportBehind+". ";
+
     if(harder) s+="What made it harder was that "+harder+". ";
     if(daily) s+="In my daily life, "+daily+". ";
 
-    if(proof){
-      const level=proofLevel || "I may have";
-      if(level==="I need to look for"){
-        s+="I need to look for proof such as "+proof+". ";
-      } else {
-        s+=level+" proof such as "+proof+". ";
-      }
-    } else if(proofLevel){
-      s+=proofLevel+" proof. ";
-    }
+    if(proofHave) s+="I have proof such as "+proofHave+". ";
+    if(proofMayHave) s+="I may have proof such as "+proofMayHave+". ";
+    if(proofNeedLook) s+="I need to look for proof such as "+proofNeedLook+". ";
 
     if(own) s+=own+". ";
 
