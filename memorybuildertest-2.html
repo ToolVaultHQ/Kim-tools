@@ -1633,7 +1633,7 @@ function validateBeforeNext(){
   return true;
 }
 
-function nextQ(){ if(STATE.qi<T.pages.length-1) goQ(STATE.qi+1); else renderDone(true); }
+function nextQ(){ if(!validateBeforeNext()) return; if(STATE.qi<T.pages.length-1) goQ(STATE.qi+1); else renderDone(true); }
 
 function renderDone(rebuild){
   T=TEMPLATES.find(t=>t.id===STATE.tid);
