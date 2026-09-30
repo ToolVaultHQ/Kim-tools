@@ -1006,15 +1006,6 @@ const TEMPLATES = [
     fields:[{key:"changed",label:"I had to",ph:"Type or speak anything to add",
       groups:[{name:"What changed",words:["sell my home","use my pension","take on more debt","cut back on essentials","delay getting help","focus on surviving","go back to school","accept unpaid placement","live with constant financial pressure","make choices I would not otherwise have made","keep trying even when I was exhausted","put some plans on hold","make difficult decisions about money"]}]}]},
 
-   {navLabel:"Child support",
-    narr:"If child support was part of what you were managing, choose anything that fits.",
-    fields:[
-      {key:"supportCurrent",label:"Trying to stay current",ph:"Type or speak anything to add",
-        groups:[{name:"Paying child support",words:["I was trying to make sure I paid my child support"]}]},
-      {key:"supportBehind",label:"Concern about falling behind",ph:"Type or speak anything to add",
-        groups:[{name:"Avoiding falling behind",words:["I was trying to make sure I did not fall behind on my child support"]}]}
-    ]},
-
    {navLabel:"What made it harder",
     narr:"What made it harder to cope, act, or keep up?",
     fields:[{key:"harder",label:"What made it harder was that",ph:"Type or speak anything to add",
@@ -1023,7 +1014,7 @@ const TEMPLATES = [
    {navLabel:"What this cost me day to day",
     narr:"How did this affect your daily life or the choices you had to make?",
     fields:[{key:"daily",label:"In my daily life",ph:"Type or speak anything to add",
-      groups:[{name:"Daily impact",words:["I had to focus on getting through one day at a time","I worried about how I would pay my basic bills","I had less energy for school or work","I found it harder to concentrate","I put off getting help because of the cost","I had to use money I had saved for the future","I had less time and energy for the boys","I had to keep going even when I felt exhausted","I had to make choices between important needs","I found it harder to plan for a stable future"]}]}]},
+      groups:[{name:"Daily impact",words:["I had to focus on getting through one day at a time","I worried about how I would pay my basic bills","I was trying to make sure I paid my child support","I was trying to make sure I did not fall behind on my child support","I had less energy for school or work","I found it harder to concentrate","I put off getting help because of the cost","I had to use money I had saved for the future","I had less time and energy for the boys","I had to keep going even when I felt exhausted","I had to make choices between important needs","I found it harder to plan for a stable future"]}]}]},
 
    {navLabel:"Proof I have",
     narr:"Choose any proof you already have. You can select more than one item.",
@@ -1085,12 +1076,19 @@ const TEMPLATES = [
     };
 
     const exactDate=formatExactDate(val("exactDate"));
-    const when=clean(val("when")),
-          affected=clean(val("affected")),
+
+    const roughDateWords=["around 2016","around 2017","around 2018","around 2019","around 2020","around 2021","around 2022","around 2023","around 2024","around 2025","around 2026"];
+    const selectedWhen=(STATE.ans.when||[]);
+    const contextWhen=selectedWhen.filter(w=>!roughDateWords.includes(w));
+    const typedWhen=clean(STATE.ans.when_txt||"");
+
+    const whenForOutput=exactDate
+      ? clean(joinAnd(contextWhen.concat(typedWhen?[typedWhen]:[])))
+      : clean(val("when"));
+
+    const affected=clean(val("affected")),
           felt=clean(val("felt")),
           changed=clean(val("changed")),
-          supportCurrent=clean(val("supportCurrent")),
-          supportBehind=clean(val("supportBehind")),
           harder=clean(val("harder")),
           daily=clean(val("daily")),
           proofHave=clean(val("proofHave")),
@@ -1099,11 +1097,12 @@ const TEMPLATES = [
           own=clean(val("own"));
 
     let s="";
+    let opener="";
 
     if(exactDate){
-      s+="On "+exactDate+", I was dealing with these effects. ";
-    } else if(when){
-      s+="This was happening "+when+". ";
+      opener="On "+exactDate+(whenForOutput?", "+whenForOutput:"");
+    } else if(whenForOutput){
+      s+="This was happening "+whenForOutput+". ";
     } else {
       const rawExactDate=clean(val("exactDate"));
       if(rawExactDate){
@@ -1111,15 +1110,25 @@ const TEMPLATES = [
       }
     }
 
-    if(affected) s+="This affected "+affected+". ";
-    if(felt) s+="It felt "+felt+". ";
-    if(changed) s+="I had to "+changed+". ";
+    function addCostSentence(capitalVersion, lowerVersion){
+      if(opener){
+        s+=opener+", "+lowerVersion+". ";
+        opener="";
+      } else {
+        s+=capitalVersion+". ";
+      }
+    }
 
-    if(supportCurrent) s+=supportCurrent+". ";
-    if(supportBehind) s+=supportBehind+". ";
+    if(affected) addCostSentence("This affected "+affected, "this affected "+affected);
+    if(felt) addCostSentence("It felt "+felt, "it felt "+felt);
+    if(changed) addCostSentence("I had to "+changed, "I had to "+changed);
+    if(harder) addCostSentence("What made it harder was that "+harder, "what made it harder was that "+harder);
+    if(daily) addCostSentence("In my daily life, "+daily, "in my daily life, "+daily);
 
-    if(harder) s+="What made it harder was that "+harder+". ";
-    if(daily) s+="In my daily life, "+daily+". ";
+    if(opener){
+      s+=opener+", this was affecting me. ";
+      opener="";
+    }
 
     if(proofHave) s+="I have proof such as "+proofHave+". ";
     if(proofMayHave) s+="I may have proof such as "+proofMayHave+". ";
