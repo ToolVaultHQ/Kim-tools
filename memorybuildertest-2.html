@@ -1536,7 +1536,9 @@ function renderPick(){
 function startT(id){STATE.tid=id;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.lastAppended='';STATE.edited=false;T=TEMPLATES.find(t=>t.id===id);goQ(0);}
 
 function goQ(i){STATE.qi=i;STATE.screen='q';save();renderQuestion();}
-function renderQuestion(){
+function renderQuestion(scrollTop){
+  scrollTop = scrollTop === true;
+
   T=TEMPLATES.find(t=>t.id===STATE.tid);
   const page=T.pages[STATE.qi];
 
