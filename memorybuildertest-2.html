@@ -1539,10 +1539,11 @@ function goQ(i){STATE.qi=i;STATE.screen='q';save();renderQuestion();}
 function renderQuestion(){
   T=TEMPLATES.find(t=>t.id===STATE.tid);
   const page=T.pages[STATE.qi];
+
   let h=`<div class="screen">${titleBar()}<div class="narr">${page.narr}</div>`;
 
   if(STATE.timingError){
-    h+=`<div style="background:#ffe8e8;border:1px solid #d33;color:#9b0000;border-radius:12px;padding:10px 12px;margin:10px 0;font-weight:700;">${esc(STATE.timingError)}</div>`;
+    h+=`<div id="timingWarning" style="background:#ffe8e8;border:1px solid #d33;color:#9b0000;border-radius:12px;padding:10px 12px;margin:10px 0;font-weight:700;">${esc(STATE.timingError)}</div>`;
   }
 
   if(page.proofChooser){
@@ -1551,7 +1552,7 @@ function renderQuestion(){
     const activeKey=validKeys.includes(STATE.proofMode)?STATE.proofMode:pc.statuses[0].key;
     const active=pc.statuses.find(s=>s.key===activeKey);
 
-    h+=`<div class="qlabel">Choose proof type</div>`;
+    h+=`<div class="qlabel">Proof type</div>`;
     h+=`<div>`;
 
     pc.statuses.forEach(st=>{
@@ -1574,7 +1575,7 @@ function renderQuestion(){
           <button class="mic" onclick="mic('${activeKey}')" title="Speak">🎤</button>
         </div>`;
 
-    h+=`<div class="fnote">Switch proof type above. Choices already made stay saved and will appear separately in the review.</div>`;
+    h+=`<div class="fnote">Switch proof type above. Your choices stay saved separately.</div>`;
   }
 
   (page.fields||[]).forEach(f=>{
@@ -1592,7 +1593,7 @@ function renderQuestion(){
       h+=`<div class="typewrap">
             <input type="date" id="txt_${f.key}" value="${esc(STATE.ans[f.key+'_txt']||'')}" oninput="saveTxt('${f.key}')">
           </div>
-          <div class="fnote">Choose the exact date if you know it. If not, use the season and year choices.</div>`;
+          <div class="fnote">If you choose an exact date, it will be used instead of season and year.</div>`;
     } else {
       h+=`<div class="typewrap">
             <input type="text" id="txt_${f.key}" placeholder="${esc(f.ph||'Type or speak your own words')}" value="${esc(STATE.ans[f.key+'_txt']||'')}" oninput="saveTxt('${f.key}')">
@@ -1617,10 +1618,18 @@ function renderQuestion(){
   afterRender();
 
   setTimeout(function(){
-    window.scrollTo(0,0);
+    window.scrollTo({top:0,left:0,behavior:"auto"});
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
+    if(app && app.scrollIntoView) app.scrollIntoView({block:"start"});
   },0);
-}
 
+  setTimeout(function(){
+    window.scrollTo({top:0,left:0,behavior:"auto"});
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
+  },120);
+}
   function renderQuestion(){
   T=TEMPLATES.find(t=>t.id===STATE.tid);
   const page=T.pages[STATE.qi];
