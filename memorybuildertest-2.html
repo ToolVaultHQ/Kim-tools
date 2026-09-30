@@ -977,18 +977,26 @@ const TEMPLATES = [
     return s.trim();
   }
  },
-    {
+  {
   id:14,
   title:"What This Has Cost Me",
   purpose:"For describing the emotional, financial, physical, mental, housing, work, school, parenting, and confidence toll this has taken.",
   blurb:"For memories about what this has cost you in daily life, what you had to give up or change, what made it harder, and what proof you have or may be able to find.",
   pages:[
    {navLabel:"When this was happening",
-    narr:"If you remember the exact date, enter it as day/month/year. You can also choose rough timing below.",
+    narr:"If you know the exact date, choose the day, month, and year. If you only know rough timing, choose that instead. You can also use both.",
     fields:[
-      {key:"exactDate",label:"Exact date, if you know it",ph:"DD/MM/YYYY",groups:[]},
-      {key:"when",label:"Or choose rough timing",ph:"Type or speak rough timing",
-        groups:[{name:"Rough timing",words:["around 2016","around 2017","around 2018","around 2019","around 2020","around 2021","around 2022","around 2023","around 2024","around 2025","around 2026","during the time I was dealing with FRO","after I sold my house","while I was in school","during my unpaid placement","while I was trying to manage without steady income","during a time I was already under financial pressure"]}]}
+      {key:"exactDay",label:"Exact day",ph:"Type the day, if you know it",
+        groups:[{name:"Day",words:["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"]}]},
+
+      {key:"exactMonth",label:"Exact month",ph:"Type the month, if you know it",
+        groups:[{name:"Month",words:["January","February","March","April","May","June","July","August","September","October","November","December"]}]},
+
+      {key:"exactYear",label:"Exact year",ph:"Type the year, if you know it",
+        groups:[{name:"Year",words:["2016","2017","2018","2019","2020","2021","2022","2023","2024","2025","2026"]}]},
+
+      {key:"when",label:"Or choose rough timing or context",ph:"Type or speak rough timing",
+        groups:[{name:"Rough timing or context",words:["around 2016","around 2017","around 2018","around 2019","around 2020","around 2021","around 2022","around 2023","around 2024","around 2025","around 2026","during the time I was dealing with FRO","after I sold my house","while I was in school","during my unpaid placement","while I was trying to manage without steady income","during a time I was already under financial pressure"]}]}
     ]},
 
    {navLabel:"What this affected",
@@ -1016,51 +1024,66 @@ const TEMPLATES = [
     fields:[{key:"daily",label:"In my daily life",ph:"Type or speak anything to add",
       groups:[{name:"Daily impact",words:["I had to focus on getting through one day at a time","I worried about how I would pay my basic bills","I was trying to make sure I paid my child support","I was trying to make sure I did not fall behind on my child support","I had less energy for school or work","I found it harder to concentrate","I put off getting help because of the cost","I had to use money I had saved for the future","I had less time and energy for the boys","I had to keep going even when I felt exhausted","I had to make choices between important needs","I found it harder to plan for a stable future"]}]}]},
 
-   {navLabel:"Proof I have",
-    narr:"Choose any proof you already have. You can select more than one item.",
-    fields:[{key:"proofHave",label:"I have",ph:"Type or speak anything else",
-      groups:[{name:"Proof I have",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]}]},
+   {navLabel:"Proof",
+    narr:"Choose proof in each section that fits. You can choose items you already have, items you may have, and items you still need to look for.",
+    fields:[
+      {key:"proofHave",label:"I have",ph:"Type or speak anything else you have",
+        groups:[{name:"Proof I have",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]},
 
-   {navLabel:"Proof I may have",
-    narr:"Choose any proof you may have. You can select more than one item.",
-    fields:[{key:"proofMayHave",label:"I may have",ph:"Type or speak anything else",
-      groups:[{name:"Proof I may have",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]}]},
+      {key:"proofMayHave",label:"I may have",ph:"Type or speak anything else you may have",
+        groups:[{name:"Proof I may have",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]},
 
-   {navLabel:"Proof I need to look for",
-    narr:"Choose anything you need to look for. You can select more than one item.",
-    fields:[{key:"proofNeedLook",label:"I need to look for",ph:"Type or speak anything else",
-      groups:[{name:"Proof I need to look for",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]}]},
-
-   {navLabel:"Your own words",
-    narr:"Anything else you want to add about what this has cost you?",
-    fields:[{key:"own",label:"Anything else?",note:"Totally optional.",ph:"Type or speak anything else",groups:[]}]}
+      {key:"proofNeedLook",label:"I need to look for",ph:"Type or speak anything else you need to look for",
+        groups:[{name:"Proof I need to look for",words:["bank statements","credit card statements","pension withdrawal records","mortgage documents","house sale documents","rent records","school records","placement records","FRO letters","lawyer letters","text messages","emails","medical records","therapy records","receipts","photos","notes I wrote at the time","witness messages","records showing changes to my income or expenses"]}]}
+    ]}
   ],
   build:function(){
     const clean=function(x){
       return (x||"").trim().replace(/[.!?]+$/,"");
     };
 
-    const formatExactDate=function(value){
-      const raw=clean(value);
-      if(!raw) return "";
+    const firstChoice=function(key){
+      const typed=(STATE.ans[key+'_txt']||"").trim();
+      if(typed) return clean(typed);
 
-      let day, month, year;
-      let match=raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      const chips=STATE.ans[key]||[];
+      if(chips.length) return clean(chips[0]);
 
-      if(match){
-        day=Number(match[1]);
-        month=Number(match[2]);
-        year=Number(match[3]);
+      return "";
+    };
+
+    const formatExactDate=function(){
+      const dayRaw=firstChoice("exactDay");
+      const monthRaw=firstChoice("exactMonth");
+      const yearRaw=firstChoice("exactYear");
+
+      if(!dayRaw || !monthRaw || !yearRaw) return "";
+
+      const dayMatch=dayRaw.match(/\d{1,2}/);
+      const yearMatch=yearRaw.match(/\d{4}/);
+
+      if(!dayMatch || !yearMatch) return "";
+
+      const day=Number(dayMatch[0]);
+      const year=Number(yearMatch[0]);
+
+      const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+      let month=0;
+
+      const monthNumber=Number(monthRaw);
+      if(monthNumber>=1 && monthNumber<=12){
+        month=monthNumber;
       } else {
-        match=raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-        if(match){
-          year=Number(match[1]);
-          month=Number(match[2]);
-          day=Number(match[3]);
+        const exactFound=months.findIndex(m=>m.toLowerCase()===monthRaw.toLowerCase());
+        if(exactFound>-1){
+          month=exactFound+1;
         } else {
-          return "";
+          const shortFound=months.findIndex(m=>m.toLowerCase().slice(0,3)===monthRaw.toLowerCase().slice(0,3));
+          if(shortFound>-1) month=shortFound+1;
         }
       }
+
+      if(!month) return "";
 
       const check=new Date(Date.UTC(year,month-1,day));
       if(check.getUTCFullYear()!==year ||
@@ -1069,13 +1092,10 @@ const TEMPLATES = [
         return "";
       }
 
-      const months=["January","February","March","April","May","June",
-                    "July","August","September","October","November","December"];
-
       return months[month-1]+" "+day+", "+year;
     };
 
-    const exactDate=formatExactDate(val("exactDate"));
+    const exactDate=formatExactDate();
 
     const roughDateWords=["around 2016","around 2017","around 2018","around 2019","around 2020","around 2021","around 2022","around 2023","around 2024","around 2025","around 2026"];
     const selectedWhen=(STATE.ans.when||[]);
@@ -1093,8 +1113,7 @@ const TEMPLATES = [
           daily=clean(val("daily")),
           proofHave=clean(val("proofHave")),
           proofMayHave=clean(val("proofMayHave")),
-          proofNeedLook=clean(val("proofNeedLook")),
-          own=clean(val("own"));
+          proofNeedLook=clean(val("proofNeedLook"));
 
     let s="";
     let opener="";
@@ -1103,11 +1122,6 @@ const TEMPLATES = [
       opener="On "+exactDate+(whenForOutput?", "+whenForOutput:"");
     } else if(whenForOutput){
       s+="This was happening "+whenForOutput+". ";
-    } else {
-      const rawExactDate=clean(val("exactDate"));
-      if(rawExactDate){
-        s+="The exact date I entered was "+rawExactDate+". ";
-      }
     }
 
     function addCostSentence(capitalVersion, lowerVersion){
@@ -1133,8 +1147,6 @@ const TEMPLATES = [
     if(proofHave) s+="I have proof such as "+proofHave+". ";
     if(proofMayHave) s+="I may have proof such as "+proofMayHave+". ";
     if(proofNeedLook) s+="I need to look for proof such as "+proofNeedLook+". ";
-
-    if(own) s+=own+". ";
 
     if(!s) s="[Use this page to describe what this has cost you, how it affected your life, what made it harder, and what proof you have or may be able to find.]";
 
