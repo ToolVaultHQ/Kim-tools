@@ -977,15 +977,16 @@ const TEMPLATES = [
     return s.trim();
   }
  },
-    {
+
+{
   id:14,
   title:"The Toll This Took on Me",
   purpose:"For describing the emotional, mental, physical, financial, housing, work, school, parenting, confidence, and daily-life toll this took.",
-  blurb:"For memories about stress, anxiety, sleep, exhaustion, health, money, housing, parenting, work, school, coping costs, support needed, and the ways this affected daily life.",
+  blurb:"For memories about stress, anxiety, sleep, exhaustion, health, money, housing, parenting, work, school, coping costs, support needed, and how this affected daily life.",
   pages:[
    {navLabel:"What is this memory about?",
-    narr:"Choose the kind of toll this memory is about, or add your own words.",
-    fields:[{key:"topic",label:"This memory is about",ph:"Type or speak what kind of toll this took",
+    narr:"Choose the kind of toll this took, or add your own words.",
+    fields:[{key:"topic",label:"This is about",ph:"Type or speak what kind of toll this took",
       groups:[{name:"Kind of toll",words:[
         "health and wellbeing",
         "money and bills",
@@ -1002,7 +1003,7 @@ const TEMPLATES = [
       ]}]}]},
 
    {navLabel:"When this was happening",
-    narr:"Choose an exact date if you know it. If not, choose the season and one year. You can also add short timing context.",
+    narr:"Choose an exact date if you know it. If not, choose the season and one year.",
     requireYearWithSeason:{seasonKey:"whenSeason",yearKey:"whenYear"},
     oneYearOnly:true,
     fields:[
@@ -1037,16 +1038,16 @@ const TEMPLATES = [
       groups:[{name:"What was happening",words:[
         "I was trying to keep up financially",
         "I was worried about falling behind",
-        "I was trying to manage bills and support",
+        "I was trying to manage bills and child support",
         "I was trying to keep my housing stable",
         "I had to use money I needed for my future",
         "I was trying to manage legal costs",
         "I was trying to rebuild after losing stability",
         "I was going back to school to improve my future",
-        "I was trying to handle school and home responsibilities at the same time",
+        "I was handling school and home responsibilities at the same time",
         "I was trying to stay responsible while everything felt heavy",
         "I was trying to protect the boys from adult stress",
-        "I was under pressure from Joe or Sandra",
+        "I was under pressure from Joe and Sandra",
         "I was trying to keep my life from falling apart"
       ]}]}]},
 
@@ -1054,16 +1055,16 @@ const TEMPLATES = [
     narr:"What parts of your life were affected?",
     fields:[{key:"affected",label:"This affected",ph:"Type or speak anything to add",
       groups:[{name:"Areas affected",words:[
-        "my ability to sleep",
+        "my sleep",
         "my energy",
-        "my ability to focus",
+        "my focus",
         "my mental health",
         "my physical health",
         "my finances",
         "my housing stability",
         "my ability to plan ahead",
-        "my ability to study",
-        "my ability to work",
+        "my school responsibilities",
+        "my work responsibilities",
         "my parenting energy",
         "my relationship with the boys",
         "my daily routine",
@@ -1094,25 +1095,27 @@ const TEMPLATES = [
       ]}]}]},
 
    {navLabel:"What I needed to cope",
-    narr:"What help or support did you need because of this?",
+    narr:"What help, support, treatment, or coping help did you need?",
     fields:[{key:"needed",label:"To cope, I needed",ph:"Type or speak anything to add",
       groups:[{name:"What I needed",words:[
-        "therapy or counselling",
+        "therapy",
+        "counselling",
+        "doctor appointments",
         "medication",
         "support from family",
-        "help getting through daily responsibilities",
+        "help with daily responsibilities",
         "space to calm down",
         "help understanding my options",
         "emotional support",
         "practical support",
-        "more rest than I was getting",
+        "more rest",
         "help staying organized",
-        "help managing the stress",
+        "help managing stress",
         "someone to talk to"
       ]}]}]},
 
    {navLabel:"What I had to change or use",
-    narr:"What did you have to give up, use, delay, or change?",
+    narr:"What did you have to give up, use, delay, pay for, or change?",
     fields:[{key:"changed",label:"I had to",ph:"Type or speak anything to add",
       groups:[{name:"What changed",words:[
         "use savings I had planned to keep",
@@ -1128,7 +1131,9 @@ const TEMPLATES = [
         "make difficult decisions about money",
         "give up stability I had worked for",
         "lean on family more than I wanted to",
-        "pay for help or support I needed to cope"
+        "pay for therapy",
+        "pay for counselling",
+        "pay for medication"
       ]}]}]},
 
    {navLabel:"What made it harder",
@@ -1151,19 +1156,19 @@ const TEMPLATES = [
         "I was trying to be responsible with less support than I needed"
       ]}]}]},
 
-   {navLabel:"What this cost me day to day",
+   {navLabel:"How it affected daily life",
     narr:"How did this affect your daily life or the choices you had to make?",
     fields:[{key:"daily",label:"Day to day",ph:"Type or speak anything to add",
       groups:[{name:"Daily impact",words:[
         "I had to focus on getting through one day at a time",
         "I worried about how I would pay my basic bills",
         "I was focused on keeping my child support paid",
-        "I worried about falling behind on child support",
-        "I had less energy for school or work",
+        "I had less energy for school",
+        "I had less energy for work",
         "I found it harder to concentrate",
         "I put off getting help because of the cost",
         "I had to use money I had saved for the future",
-        "I had less time and emotional energy for the boys",
+        "I had less emotional energy for the boys",
         "I had to keep going even when I felt completely worn out",
         "I had to choose between needs that all mattered",
         "I avoided spending money even on things I needed",
@@ -1188,19 +1193,21 @@ const TEMPLATES = [
         "house sale documents",
         "rent records",
         "school records",
-        "placement records",
+        "work records",
         "lawyer letters",
         "court documents",
         "text messages",
         "emails",
         "medical records",
-        "therapy or counselling records",
+        "therapy records",
+        "counselling records",
         "medication cost records",
         "receipts",
         "photos",
         "notes I wrote at the time",
         "witness messages",
-        "records showing changes to my income or expenses"
+        "records showing changes to my income",
+        "records showing changes to my expenses"
       ]
     },
     fields:[]}
@@ -1283,15 +1290,7 @@ const TEMPLATES = [
         return "Around the "+seasonText+" of "+yearText;
       }
 
-      if(seasons.length && years.length>1){
-        return "Around the "+seasonText+" of "+yearText;
-      }
-
       if(!seasons.length && years.length===1){
-        return "Around "+yearText;
-      }
-
-      if(!seasons.length && years.length>1){
         return "Around "+yearText;
       }
 
@@ -1327,15 +1326,18 @@ const TEMPLATES = [
 
     let s="";
 
-    if(timing && topic){
-      s+=timing+", this memory is about "+topic+". ";
-    } else if(timing){
-      s+=timing+", this memory is about the toll this took on me. ";
-    } else if(topic){
-      s+="This memory is about "+topic+". ";
+    if(topic){
+      s+="This is about "+topic+". ";
     }
 
-    if(what) s+="What was happening was that "+what+". ";
+    if(timing && what){
+      s+=timing+", what was happening was that "+what+". ";
+    } else if(timing){
+      s+=timing+", this took a toll on me. ";
+    } else if(what){
+      s+="What was happening was that "+what+". ";
+    }
+
     if(affected) s+="This affected "+affected+". ";
     if(symptoms) s+="I experienced "+symptoms+". ";
     if(needed) s+="To cope, I needed "+needed+". ";
@@ -1343,9 +1345,9 @@ const TEMPLATES = [
     if(harder) s+="What made it harder was that "+harder+". ";
     if(daily) s+="Day to day, "+daily+". ";
 
-    if(proofHave) s+="I have proof such as "+proofHave+". ";
-    if(proofMayHave) s+="I may have proof such as "+proofMayHave+". ";
-    if(proofNeedLook) s+="I need to look for proof such as "+proofNeedLook+". ";
+    if(proofHave) s+="Proof I have includes "+proofHave+". ";
+    if(proofMayHave) s+="Proof I may have includes "+proofMayHave+". ";
+    if(proofNeedLook) s+="Proof I need to look for includes "+proofNeedLook+". ";
 
     if(!s){
       s="[Use this page to describe the toll this took on your health, stress, sleep, finances, housing, parenting, school, work, coping, daily life, and what proof you have or may be able to find.]";
