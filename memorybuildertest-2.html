@@ -1524,15 +1524,56 @@ function titleBar(){
 
 // ---------------- SCREENS ----------------
 function renderPick(){
-  STATE.screen='pick'; STATE.tid=null; save(); T=null;
+  STATE.screen='pick';
+  STATE.tid=null;
+  save();
+  T=null;
+
+  let list=[];
+  let problem='';
+
+  try{
+    if(Array.isArray(TEMPLATES)){
+      list=TEMPLATES;
+    }else{
+      problem='TEMPLATES exists but is not an array.';
+    }
+  }catch(e){
+    problem='TEMPLATES caused an error: '+(e.message||e);
+  }
+
   let h=`<div class="screen">
-    <p class="lead">Pick the corresponding number of the topic that fits your memory. It walks you through, one small question at a time. Everything saves automatically.</p>`;
-  TEMPLATES.forEach(t=>{
-    h+=`<div class="blurbcard" onclick="startT(${t.id})">
-        <h3>${t.id}. ${t.title}</h3><p>${t.blurb}</p></div>`;
+    <p class="lead">Pick the corresponding number of the topic that fits your memory. It walks you through, one small question at a time. Everything saves automatically.</p>
+
+    <div style="background:#fff3cd;border:1px solid #d6a100;color:#4a3500;border-radius:12px;padding:10px 12px;margin:12px 0;font-weight:700;">
+      Diagnostic: Template count = ${list.length}${problem ? '<br>'+problem : ''}
+    </div>`;
+
+  if(!list.length){
+    h+=`<div style="background:#ffe8e8;border:1px solid #d33;color:#9b0000;border-radius:12px;padding:10px 12px;margin:12px 0;font-weight:700;">
+      No templates were available for renderPick() to display.
+    </div>`;
+  }
+
+  list.forEach(function(t,idx){
+    try{
+      h+=`<div class="blurbcard" style="display:block !important;border:1px solid #d7c5aa;border-radius:16px;padding:14px;margin:12px 0;background:#fffaf2;color:#2b2118;" onclick="startT(${t.id})">
+        <h3 style="margin:0 0 6px 0;">${t.id}. ${t.title}</h3>
+        <p style="margin:0;">${t.blurb || ''}</p>
+      </div>`;
+    }catch(e){
+      h+=`<div style="background:#ffe8e8;border:1px solid #d33;color:#9b0000;border-radius:12px;padding:10px 12px;margin:12px 0;font-weight:700;">
+        Error rendering template at index ${idx}: ${e.message||e}
+      </div>`;
+    }
   });
-  h+=`</div>`; app.innerHTML=h; afterRender();
+
+  h+=`</div>`;
+
+  app.innerHTML=h;
+  afterRender();
 }
+
 function startT(id){STATE.tid=id;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.lastAppended='';STATE.edited=false;T=TEMPLATES.find(t=>t.id===id);goQ(0);}
 
 function goQ(i){
