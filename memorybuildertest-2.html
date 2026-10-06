@@ -1738,9 +1738,32 @@ function validateBeforeNext(){
 }
 function nextQ(){ if(!validateBeforeNext()) return; if(STATE.qi<T.pages.length-1) goQ(STATE.qi+1); else renderDone(true); }
 
+function templateSaying(t){
+  const sayings={
+    1:"Tell it messy. I’ll help make it make sense.",
+    2:"Tell what happened between you. I’ll help keep the words clear and fair.",
+    3:"Start with the piece you remember. I’ll help shape it into a clear memory.",
+    4:"Say what became clear. I’ll help show why it mattered.",
+    5:"Tell what changed. I’ll help show the before, the after, and why it mattered.",
+    6:"List what it cost you. I’ll help connect it to the bigger picture.",
+    7:"Name the pressure. I’ll help keep the facts clear.",
+    8:"Say what happened. I’ll help protect your place as Mom.",
+    9:"Tell what changed. I’ll help show what you had to rebuild.",
+    10:"Save the ways you stayed close. I’ll help show the bond.",
+    11:"List what was demanded. I’ll help connect it to the proof.",
+    12:"Tell why it took time. I’ll help show you were trying, not avoiding.",
+    13:"Name what happened. I’ll help you not carry it alone.",
+    14:"Say what it took from you. I’ll help show the toll clearly.",
+    15:"Save what they said or did. I’ll help show the love and connection.",
+    16:"Tell what you noticed. I’ll help sort the facts."
+  };
+  return sayings[t.id] || "Tell it in your own words. I’ll help make it clearer.";
+}
+
 function renderDone(rebuild){
   T=TEMPLATES.find(t=>t.id===STATE.tid);
   STATE.screen='done';
+
   if(rebuild || !STATE.finalText || !STATE.edited){
     STATE.finalText=buildMemory();
     const s=addSentence();
@@ -1748,104 +1771,195 @@ function renderDone(rebuild){
     STATE.lastAppended=s;
     STATE.edited=false;
   }
+
   save();
+
+  const saying=templateSaying(T);
+
   let h=`<div class="screen">
     ${titleBar()}
-    <div class="narr">Look what you captured, that took real courage. 🌿 Read it over below, then tap Polish to finish.</div>
+
+    <div class="narr">${esc(saying)}</div>
+
     <div class="qlabel">Your Memory</div>
     <textarea class="finaledit" id="finalEdit" spellcheck="true" autocorrect="on" autocapitalize="sentences" oninput="saveFinal()">${esc(STATE.finalText)}</textarea>
-    <div class="qlabel" style="font-size:16px;margin-top:16px">I also want to add that…</div>
+
+    <div class="qlabel" style="font-size:16px;margin-top:16px">I also want to add that …</div>
     <div class="typewrap">
       <textarea class="addbox" id="addBox" spellcheck="true" autocorrect="on" autocapitalize="sentences" placeholder="Type or speak anything else that's coming back to you" oninput="saveAdd()">${esc(STATE.addText)}</textarea>
       <button class="mic" onclick="micAdd()" title="Speak">🎤</button>
     </div>
+
     <div class="fnote">This gets added to the end of your memory above.</div>
+
     <div class="navbtns">
       <button class="b sec" onclick="goQ(${T.pages.length-1})">← Edit answers</button>
-      <button class="b polish" onclick="polishSpelling()">✨ Polish my spelling</button>
+      <button class="b sec" onclick="copyFinalMemory()">Copy memory</button>
+      <button class="b polish" onclick="polishSpelling()">✨ Preserve, Polish & Place It</button>
     </div>
-    <div class="fnote" style="margin-top:8px;text-align:center">Opens a free helper. Paste it in, it fixes the spelling and grammar in your own words, then copy the clean version into your journal under “What happened.”</div>
+
+    <div class="fnote" style="margin-top:8px;text-align:center">
+      This copies my memory with instructions for ChatGPT, so it can keep my words, clean up the writing, and organize it where it belongs.
+    </div>
+
     <button class="skip b" style="margin-top:16px" onclick="startAnother()">Start another memory</button>
   </div>`;
-  app.innerHTML=h; afterRender();
+
+  app.innerHTML=h;
+  afterRender();
 }
-function saveFinal(){STATE.finalText=document.getElementById('finalEdit').value;STATE.edited=true;save();}
+
+function saveFinal(){
+  const box=document.getElementById('finalEdit');
+  if(box){
+    STATE.finalText=box.value;
+    STATE.edited=true;
+    save();
+  }
+}
+
 function saveAdd(){
-  STATE.addText=document.getElementById('addBox').value;
+  const addBox=document.getElementById('addBox');
+  STATE.addText=addBox ? addBox.value : '';
+
   let base=STATE.finalText||'';
+
   if(STATE.lastAppended && base.endsWith(STATE.lastAppended)){
     base=base.slice(0, base.length-STATE.lastAppended.length);
   }
+
   const s=addSentence();
   STATE.finalText=base+s;
   STATE.lastAppended=s;
+
   const box=document.getElementById('finalEdit');
   if(box) box.value=STATE.finalText;
+
   save();
 }
-function polishSpelling(){
+
+function copyToClipboard(text,doneMsg){
+  function done(){
+    toast(doneMsg || "Copied!");
+  }
+
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(function(){
+      var t=document.createElement('textarea');
+      t.value=text;
+      document.body.appendChild(t);
+      t.select();
+      document.execCommand('copy');
+      t.remove();
+      done();
+    });
+  }else{
+    var t=document.createElement('textarea');
+    t.value=text;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand('copy');
+    t.remove();
+    done();
+  }
+}
+
+function copyFinalMemory(){
   const box=document.getElementById('finalEdit');
-  const text=box?box.value:(STATE.finalText||'');
-  const prompt="Please fix the spelling and grammar in the text below, and gently smooth any awkward or broken sentences so it reads naturally. Keep it in my own words and my own voice, do not change the meaning, and do not add new information. Then give it back to me:\n\n"+text;
-  function go(){toast("Copied! Opening the helper, just paste it in ✨");setTimeout(function(){window.open('https://chatgpt.com/','_blank');},900);}
-  navigator.clipboard.writeText(prompt).then(go).catch(function(){
-    var t=document.createElement('textarea');t.value=prompt;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();go();
-  });
-}
-function startAnother(){STATE.tid=null;STATE.ans={};STATE.qi=0;STATE.finalText=null;STATE.addText='';STATE.lastAppended='';STATE.edited=false;STATE.screen='pick';save();renderPick();}
+  const text=box ? box.value : (STATE.finalText||'');
 
-// ---------------- CATCH A MEMORY ----------------
-function refreshBadge(){
-  const b=document.getElementById('catchBadge');
-  if(STATE.caught.length){b.style.display='inline-block';b.textContent=STATE.caught.length;} else b.style.display='none';
-}
-function openCatch(){document.getElementById('modal').style.display='flex';drawCaught();}
-function closeCatch(){document.getElementById('modal').style.display='none';document.getElementById('catchInput').value='';}
-function saveCatch(){const v=document.getElementById('catchInput').value.trim();if(v){STATE.caught.push(v);save();document.getElementById('catchInput').value='';drawCaught();refreshBadge();toast("Saved, you won't lose it 💛");}}
-function drawCaught(){
-  const l=document.getElementById('caughtList');
-  l.innerHTML=STATE.caught.length? STATE.caught.map((c,i)=>`<div class="caught">${esc(c)} <span style="float:right;color:#b04a2a;cursor:pointer;font-weight:900" onclick="delCaught(${i})">✕</span></div>`).join('') : `<p style="font-size:14px;color:#8a7d72;margin-top:12px">Nothing yet. Anything you jot here is saved.</p>`;
-  document.getElementById('clearAll').style.display=STATE.caught.length?'block':'none';
-}
-function delCaught(i){STATE.caught.splice(i,1);save();drawCaught();refreshBadge();}
-function clearAllCaught(){if(confirm("Clear the whole list? This can't be undone.")){STATE.caught=[];save();drawCaught();refreshBadge();}}
+  STATE.finalText=text;
+  STATE.edited=true;
+  save();
 
-// ---------------- MIC ----------------
-function micInto(elId, after){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){toast("Tip: tap the 🎤 on your keyboard to speak instead");return;}
-  const r=new SR();r.lang='en-CA';r.onresult=e=>{
-    const box=document.getElementById(elId);
-    box.value=(box.value?box.value+' ':'')+e.results[0][0].transcript;
-    if(after)after();};
-  r.onerror=()=>toast("Couldn't hear you. Try the 🎤 on your keyboard");
-  try{r.start();toast("Listening, speak now 🎤");}catch(e){toast("Use the 🎤 on your keyboard instead");}
+  copyToClipboard(text,"Memory copied.");
 }
-function mic(key){micInto('txt_'+key, ()=>{saveTxt(key);renderQuestion();});}
-function micAdd(){micInto('addBox', ()=>{saveAdd();});}
 
-// ---------------- KEEP CATCH BUTTON VISIBLE WHEN ZOOMED ----------------
-function positionCatch(){
-  const btn=document.getElementById('catchBtn');
-  if(!window.visualViewport||!btn) return;
-  const vv=window.visualViewport;
-  btn.style.left=(vv.offsetLeft+vv.width-btn.offsetWidth-14)+'px';
-  btn.style.top=(vv.offsetTop+vv.height-btn.offsetHeight-14)+'px';
-  btn.style.right='auto'; btn.style.bottom='auto';
-}
-if(window.visualViewport){
-  visualViewport.addEventListener('resize',positionCatch);
-  visualViewport.addEventListener('scroll',positionCatch);
-}
-function afterRender(){refreshBadge();positionCatch();}
+function buildChatGPTPrompt(){
+  T=TEMPLATES.find(t=>t.id===STATE.tid);
 
-// ---------------- TOAST + INIT ----------------
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
-function init(){
-  if(STATE.tid && STATE.screen==='q'){T=TEMPLATES.find(t=>t.id===STATE.tid); if(T){renderQuestion();return;}}
-  if(STATE.tid && STATE.screen==='done'){T=TEMPLATES.find(t=>t.id===STATE.tid); if(T){renderDone(false);return;}}
+  const box=document.getElementById('finalEdit');
+  const memoryText=box ? box.value : (STATE.finalText||'');
+
+  STATE.finalText=memoryText;
+  STATE.edited=true;
+  save();
+
+  const templateNumber=T && T.id ? T.id : "";
+  const templateTitle=T && T.title ? T.title : "";
+  const templatePurpose=T && T.purpose ? T.purpose : "";
+  const templateBlurb=T && T.blurb ? T.blurb : "";
+
+  return `Template Number:
+${templateNumber}
+
+Template Title:
+${templateTitle}
+
+Template Purpose:
+${templatePurpose || templateBlurb}
+
+Kim’s Memory:
+${memoryText}
+
+Instructions for ChatGPT:
+Use the Master Initial Instructions already provided in this chat.
+
+Please preserve Kim’s facts, meaning, and voice. Clean up spelling, grammar, punctuation, and awkward wording so the memory reads clearly, but do not change what Kim meant.
+
+Do not invent facts. Do not add dates, events, documents, motives, admissions, legal conclusions, or details that Kim did not provide.
+
+Organize this memory where it best belongs in Kim’s ongoing record. If helpful, identify possible timeline dates, people involved, communication methods, documents, proof, and missing information.
+
+If this memory may relate to Ontario family court materials, identify possible connections cautiously. Use wording like “may relate to,” “may support,” or “needs verification.” Consider possible connections to Form 15, Form 14A, Form 13, Form 13.1, Form 13A, Form 17A, and Form 17C only where appropriate.
+
+Do not give legal advice or state legal conclusions. Focus on preserving, polishing, organizing, and flagging what may need proof or follow-up.`;
+}
+
+function polishSpelling(){
+  const prompt=buildChatGPTPrompt();
+
+  function go(){
+    toast("Copied! Opening ChatGPT now ✨");
+    setTimeout(function(){
+      window.open('https://chatgpt.com/','_blank');
+    },900);
+  }
+
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(prompt).then(go).catch(function(){
+      var t=document.createElement('textarea');
+      t.value=prompt;
+      document.body.appendChild(t);
+      t.select();
+      document.execCommand('copy');
+      t.remove();
+      go();
+    });
+  }else{
+    var t=document.createElement('textarea');
+    t.value=prompt;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand('copy');
+    t.remove();
+    go();
+  }
+}
+
+function startAnother(){
+  STATE.tid=null;
+  STATE.ans={};
+  STATE.qi=0;
+  STATE.finalText=null;
+  STATE.addText='';
+  STATE.lastAppended='';
+  STATE.edited=false;
+  STATE.screen='pick';
+  save();
   renderPick();
 }
+
 init();
 </script>
 </body>
